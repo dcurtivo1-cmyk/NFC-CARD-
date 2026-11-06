@@ -39,7 +39,7 @@ export default function Profile() {
         setState(
           error.status === 404 && local
             ? { document: local }
-            : { error: error.message, retry: error.status !== 404 },
+            : { error: error.message, missing: error.status === 404 },
         );
       }
     }
@@ -59,20 +59,22 @@ export default function Profile() {
       <div className="section-container profile-missing">
         <EmptyState
           icon={Link2Off}
-          title="This little page isn’t here yet."
+          title={
+            state.missing
+              ? "This little page isn’t here yet."
+              : "We couldn’t load this page."
+          }
           action={{ to: "/create", label: "Create your own page" }}
         >
           {state.error ||
             "This page has not been published or has been deleted."}
         </EmptyState>
-        {state.retry && (
-          <button
-            className="btn btn-secondary"
-            onClick={() => setAttempt((n) => n + 1)}
-          >
-            Try again
-          </button>
-        )}
+        <button
+          className="btn btn-secondary"
+          onClick={() => setAttempt((n) => n + 1)}
+        >
+          Try again
+        </button>
       </div>
     );
   const owner = canManagePublishedPage(id) || !doc.publishedAt;

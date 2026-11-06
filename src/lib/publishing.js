@@ -18,37 +18,50 @@ export function canManagePublishedPage(id) {
   }
 }
 async function requestPage(id, options = {}) {
-  let response;
+  // Older iOS and in-app browsers support AbortController but not
+  // AbortSignal.any/timeout. Keep cancellation and the deadline compatible.
+  const controller = new AbortController();
+  const cancel = () => controller.abort();
+  if (options.signal?.aborted) cancel();
+  else options.signal?.addEventListener("abort", cancel, { once: true });
+  const timeout = setTimeout(cancel, 20_000);
   try {
-    response = await fetch(`/api/pages/${encodeURIComponent(id)}`, {
-      ...options,
-      cache: "no-store",
-      signal: options.signal
-        ? AbortSignal.any([options.signal, AbortSignal.timeout(20_000)])
-        : AbortSignal.timeout(20_000),
-    });
-  } catch (error) {
-    if (options.signal?.aborted) throw error;
-    throw new Error(
-      "Could not reach the publishing server. Your local work is saved; check your connection and try again.",
-    );
+    let response;
+    try {
+      response = await fetch(`/api/pages/${encodeURIComponent(id)}`, {
+        ...options,
+        cache: "no-store",
+        signal: controller.signal,
+      });
+    } catch (error) {
+      if (options.signal?.aborted) throw error;
+      throw new Error(
+        "Could not reach the publishing server. Check your connection and try again.",
+      );
+    }
+    let data;
+    try {
+      data = await response.json();
+    } catch (error) {
+      if (options.signal?.aborted) throw error;
+      throw new Error(
+        controller.signal.aborted
+          ? "Loading the page took too long. Please try again."
+          : "The publishing server returned an invalid response. Please try again.",
+      );
+    }
+    if (!response.ok) {
+      const error = new Error(
+        data.error || "Could not complete the publishing request.",
+      );
+      error.status = response.status;
+      throw error;
+    }
+    return data;
+  } finally {
+    clearTimeout(timeout);
+    options.signal?.removeEventListener("abort", cancel);
   }
-  let data;
-  try {
-    data = await response.json();
-  } catch {
-    throw new Error(
-      "Publishing is not configured on this host. Your local work is saved; the site needs its publishing backend.",
-    );
-  }
-  if (!response.ok) {
-    const error = new Error(
-      data.error || "Could not complete the publishing request.",
-    );
-    error.status = response.status;
-    throw error;
-  }
-  return data;
 }
 export async function publishPage(document) {
   const savedKeys = keys();

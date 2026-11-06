@@ -83,6 +83,12 @@ test("failed publication stays editable, retries safely, and remote deletion inv
   const visitor = await browser.newContext();
   try {
     const other = await visitor.newPage();
+    // iOS 16 and older embedded browsers lack these static helpers.
+    // Publishing can work there while public reads used to fail before fetch.
+    await other.addInitScript(() => {
+      AbortSignal.any = undefined;
+      AbortSignal.timeout = undefined;
+    });
     await other.addInitScript(() => {
       Storage.prototype.getItem = () => {
         throw new Error("Storage disabled");
@@ -113,4 +119,26 @@ test("failed publication stays editable, retries safely, and remote deletion inv
   } finally {
     await visitor.close();
   }
+});
+
+test("a visitor can retry a missing page after its owner publishes it", async ({ page }) => {
+  const document = {
+    ...createDocument("card", true),
+    id: `fl-${crypto.randomUUID()}`,
+    status: "generated",
+    publishedAt: new Date().toISOString(),
+  };
+  let published = false;
+  await page.route("**/api/pages/*", (route) =>
+    route.fulfill({
+      status: published ? 200 : 404,
+      contentType: "application/json",
+      body: JSON.stringify(published ? { document } : { error: "Page not found." }),
+    }),
+  );
+  await page.goto(`/p/${document.id}`);
+  await expect(page.getByRole("heading", { name: "This little page isn’t here yet." })).toBeVisible();
+  published = true;
+  await page.getByRole("button", { name: "Try again", exact: true }).click();
+  await expect(page.locator(".public-card-wrap .profile-name")).toHaveText("Alex Morgan");
 });
