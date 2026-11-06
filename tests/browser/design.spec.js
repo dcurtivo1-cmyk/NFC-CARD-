@@ -43,11 +43,11 @@ test("design options update the live card and survive draft load and profile gen
     );
   }
 
-  for (const [name, color] of [
-    ["Ocean Blue", "#3269d5"],
-    ["Midnight", "#bcb0fa"],
-    ["Warm Sunset", "#ad493b"],
-    ["Sage Green", "#376953"],
+  for (const [name, color, background, text] of [
+    ["Ocean Blue", "#3269d5", "rgb(243, 247, 255)", "rgb(24, 45, 77)"],
+    ["Midnight", "#bcb0fa", "rgb(32, 33, 43)", "rgb(246, 244, 255)"],
+    ["Warm Sunset", "#ad493b", "rgb(255, 247, 241)", "rgb(84, 46, 41)"],
+    ["Sage Green", "#376953", "rgb(244, 248, 242)", "rgb(36, 62, 49)"],
   ]) {
     await choose("Color palette presets", name);
     expect(
@@ -55,6 +55,16 @@ test("design options update the live card and survive draft load and profile gen
         el.style.getPropertyValue("--profile-primary"),
       ),
     ).toBe(color);
+    await expect(preview).toHaveCSS("background-color", background);
+    await expect(preview.locator(".profile-name")).toHaveCSS("color", text);
+    await expect(preview.locator(".profile-content")).toHaveCSS(
+      "background-color",
+      "rgba(0, 0, 0, 0)",
+    );
+    await expect(preview.locator(".portrait-fade")).toHaveCSS(
+      "background-image",
+      `linear-gradient(rgba(0, 0, 0, 0), ${background})`,
+    );
     await expect(preview).toHaveClass(/header-classic/);
   }
   for (const [name, id] of [
@@ -132,6 +142,13 @@ test("design options update the live card and survive draft load and profile gen
     "8px",
   );
   await page.getByLabel("Header start color", { exact: true }).fill("#123456");
+  await page.getByLabel("Background", { exact: true }).fill("#123456");
+  await page.getByLabel("Text color", { exact: true }).fill("#fedcba");
+  await expect(preview).toHaveCSS("background-color", "rgb(18, 52, 86)");
+  await expect(preview.locator(".profile-name")).toHaveCSS(
+    "color",
+    "rgb(254, 220, 186)",
+  );
   await expect(preview.locator(".profile-cover")).toHaveCSS(
     "background-image",
     /rgb\(18, 52, 86\)/,
@@ -169,6 +186,14 @@ test("design options update the live card and survive draft load and profile gen
     /button-elevated header-split links-grid background-grid icon-rounded/,
   );
   await page.reload();
+  await expect(page.locator(".public-card-wrap .profile-card")).toHaveCSS(
+    "background-color",
+    "rgb(18, 52, 86)",
+  );
+  await expect(page.locator(".public-card-wrap .profile-name")).toHaveCSS(
+    "color",
+    "rgb(254, 220, 186)",
+  );
   await expect(page.locator(".public-card-wrap .profile-card")).toHaveClass(
     /button-elevated header-split links-grid background-grid icon-rounded/,
   );

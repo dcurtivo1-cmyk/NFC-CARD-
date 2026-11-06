@@ -214,7 +214,15 @@ test("portraits preserve alpha and proportions, layer over the cover, and persis
       await publicPage.setViewportSize({ width, height: 900 });
       await expect(publicPage.locator(".profile-content")).toHaveCSS(
         "background-color",
-        "rgb(255, 255, 255)",
+        "rgba(0, 0, 0, 0)",
+      );
+      await expect(publicPage.locator(".profile-card")).toHaveCSS(
+        "background-color",
+        `rgb(${saved.design.background
+          .slice(1)
+          .match(/.{2}/g)
+          .map((part) => parseInt(part, 16))
+          .join(", ")})`,
       );
       const layout = await publicPage.evaluate(() => {
         const card = document.querySelector(".profile-card");

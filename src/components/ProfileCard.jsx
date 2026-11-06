@@ -103,15 +103,12 @@ export default function ProfileCard({
         className={`profile-card ${portraitMode ? "portrait-card" : type === "card" ? "photo-circle" : ""} ${phone ? "in-phone" : ""} button-${design.buttonStyle} header-${headerLayout} links-${buttonLayout} background-${backgroundStyle} icon-${iconStyle} ${d.coverPhoto ? "with-cover-photo" : ""}`}
         style={{
           "--profile-primary": design.primary,
-          "--profile-bg": portraitMode ? "#ffffff" : design.background,
-          "--profile-text": portraitMode
-            ? readableOnWhite(design.text)
-            : design.text,
+          "--profile-bg": design.background,
+          "--profile-text": design.text,
           "--portrait-size": `${design.portraitSize ?? 100}%`,
           "--portrait-x": `${design.portraitX ?? 0}%`,
           "--portrait-y": `${design.portraitY ?? 0}%`,
           "--portrait-cover": design.cover,
-          "--portrait-accent-ink": readableOnWhite(design.primary),
           "--portrait-button-ink":
             readableOnWhite(design.primary) === design.primary
               ? "#ffffff"

@@ -237,7 +237,7 @@ export default function DesignForm({
           <p className="field-hint">
             Size keeps the image proportions. Moving or enlarging it can place
             part of the image outside the banner. Positive vertical values move
-            it up. The information section stays white.
+            it up. The information section follows your selected colors.
           </p>
         </FormSection>
       )}

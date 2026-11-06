@@ -282,7 +282,7 @@ export default function Dashboard() {
                   <div
                     className={`workspace-mini-page ${portraitMode ? "mini-portrait-card" : ""} mini-header-${doc.design.headerLayout} mini-links-${doc.design.buttonLayout}`}
                     style={{
-                      background: portraitMode ? "#fff" : doc.design.background,
+                      background: doc.design.background,
                       "--portrait-size": `${doc.design.portraitSize ?? 100}%`,
                       "--portrait-x": `${doc.design.portraitX ?? 0}%`,
                       "--portrait-y": `${doc.design.portraitY ?? 0}%`,
