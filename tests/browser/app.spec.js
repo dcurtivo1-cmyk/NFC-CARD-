@@ -109,7 +109,7 @@ test("calling card journey validates, crops, customizes, saves, generates and ex
     buffer: image,
   });
   await expect(page.getByRole("dialog")).toBeVisible();
-  await page.getByLabel("Zoom", { exact: true }).fill("1.5");
+  await expect(page.getByLabel("Zoom", { exact: true })).toHaveCount(0);
   await expect(
     page.getByRole("button", { name: "Use this image" }),
   ).toBeEnabled();
@@ -117,7 +117,7 @@ test("calling card journey validates, crops, customizes, saves, generates and ex
   await expect(page.getByAltText("Profile photo preview")).toBeVisible();
   expect(
     await page.getByAltText("Profile photo preview").getAttribute("src"),
-  ).toMatch(/^data:image\/jpeg/);
+  ).toMatch(/^data:image\/(webp|png)/);
   await page.getByRole("button", { name: "Remove profile photo" }).click();
   await expect(page.getByAltText("Profile photo preview")).toHaveCount(0);
   await page.getByRole("button", { name: "Add a custom link" }).click();

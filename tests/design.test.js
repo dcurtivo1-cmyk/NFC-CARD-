@@ -25,6 +25,24 @@ test("all design options survive the storage normalization boundary", () => {
     font: fontOptions,
     buttonStyle: buttonStyles,
   };
+  const portrait = createDocument("card", true);
+  Object.assign(portrait.design, {
+    portraitSize: 120,
+    portraitX: -12,
+    portraitY: 9,
+  });
+  const restored = normalizeDocument(portrait).design;
+  assert.equal(restored.portraitSize, 120);
+  assert.equal(restored.portraitX, -12);
+  assert.equal(restored.portraitY, 9);
+  const constrained = normalizeDesign({
+    portraitSize: 900,
+    portraitX: -999,
+    portraitY: NaN,
+  });
+  assert.equal(constrained.portraitSize, 140);
+  assert.equal(constrained.portraitX, -35);
+  assert.equal(constrained.portraitY, 0);
   for (const [key, choices] of Object.entries(options)) {
     for (const choice of choices) {
       const doc = createDocument("card", true);

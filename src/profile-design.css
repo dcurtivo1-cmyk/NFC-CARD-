@@ -726,3 +726,126 @@
 .workspace-mini-page.mini-header-minimal > .mini-page-cover.has-cover-photo {
   height: 46px;
 }
+
+/* Business card portraits remain whole, unframed layers above the banner. */
+.profile-card.portrait-card .profile-cover {
+  position: relative;
+  isolation: isolate;
+  aspect-ratio: 6 / 5;
+  height: auto !important;
+  overflow: hidden;
+  background: var(--portrait-cover) !important;
+}
+.profile-card.portrait-card .profile-portrait {
+  position: absolute;
+  z-index: 2;
+  left: calc(50% + var(--portrait-x));
+  bottom: var(--portrait-y);
+  transform: translateX(-50%);
+  width: var(--portrait-size);
+  height: var(--portrait-size);
+  max-width: none;
+  object-fit: contain;
+  object-position: center bottom;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+}
+.portrait-card .portrait-fade {
+  position: absolute;
+  z-index: 3;
+  inset: auto 0 0;
+  height: 18%;
+  background: linear-gradient(to bottom, transparent, #fff);
+  pointer-events: none;
+}
+.profile-card.portrait-card .profile-logo {
+  z-index: 4;
+}
+.profile-card.portrait-card .profile-content {
+  background: #fff;
+  padding-top: 10px;
+}
+.profile-card.portrait-card .profile-identity {
+  display: block;
+  padding-top: 0;
+}
+.profile-card.portrait-card .profile-name {
+  margin-top: 10px;
+}
+.portrait-card .profile-main-button,
+.portrait-card:is(.button-filled, .button-elevated) .profile-button {
+  color: var(--portrait-button-ink);
+}
+.portrait-card:is(.button-outline, .button-soft) .profile-button,
+.portrait-card .profile-socials > a {
+  color: var(--portrait-accent-ink);
+}
+.portrait-upload-thumb,
+.portrait-upload-preview {
+  border-radius: 0;
+  background: repeating-conic-gradient(#e9e5ed 0% 25%, #fff 0% 50%) 0 0 / 16px
+    16px;
+}
+.upload-thumb.portrait-upload-thumb img {
+  object-fit: contain;
+  border-radius: 0;
+}
+.crop-preview.portrait-upload-preview canvas {
+  width: 100%;
+  height: auto;
+  max-height: 360px;
+  object-fit: contain;
+  border-radius: 0;
+}
+.theme-art .theme-portrait {
+  position: absolute;
+  top: 0;
+  left: 25%;
+  width: 50%;
+  height: 55%;
+  object-fit: contain;
+  object-position: center bottom;
+  border: 0;
+  border-radius: 0;
+}
+.portrait-design .theme-art .theme-cover {
+  height: 55%;
+}
+.portrait-design .theme-art > i {
+  margin-top: 7px;
+}
+.portrait-design .illustration-header > b {
+  display: none;
+}
+.portrait-design .illustration-header > i {
+  height: 50%;
+}
+.portrait-design .illustration-header > em {
+  top: 63%;
+}
+.portrait-design .illustration-header > span {
+  top: 78%;
+}
+.workspace-mini-page.mini-portrait-card > .mini-page-cover {
+  height: 85px;
+  margin-bottom: 8px;
+}
+.mini-portrait-card .mini-portrait {
+  position: absolute;
+  left: calc(50% + var(--portrait-x));
+  bottom: var(--portrait-y);
+  transform: translateX(-50%);
+  width: var(--portrait-size);
+  height: var(--portrait-size);
+  max-width: none;
+  object-fit: contain;
+  object-position: center bottom;
+  border-radius: 0;
+  border: 0;
+}
+.mini-portrait-card > strong,
+.mini-portrait-card > small {
+  color: #302742 !important;
+}

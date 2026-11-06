@@ -130,6 +130,8 @@ export default function DetailsForm({ document, onChange, errors }) {
           name="profilePhoto"
           value={d.profilePhoto}
           onChange={onChange}
+          preservePortrait={type === "card"}
+          outputWidth={type === "card" ? 1024 : 512}
         />
         <ImageUpload
           label="Business logo"

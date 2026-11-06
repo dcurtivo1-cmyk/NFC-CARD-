@@ -15,8 +15,8 @@ export default function ImageUpload({
   name,
   aspectRatio = 1,
   outputWidth = 512,
+  preservePortrait = false,
 }) {
-  const outputHeight = Math.round(outputWidth / aspectRatio);
   const [source, setSource] = useState(null);
   const [loaded, setLoaded] = useState(null);
   const [zoom, setZoom] = useState(1);
@@ -26,6 +26,20 @@ export default function ImageUpload({
   const canvasRef = useRef();
   const fileRef = useRef();
   const { notify } = useFeedback();
+  const scale = loaded
+    ? Math.min(
+        1,
+        outputWidth / Math.max(loaded.naturalWidth, loaded.naturalHeight),
+      )
+    : 1;
+  const canvasWidth =
+    preservePortrait && loaded
+      ? Math.max(1, Math.round(loaded.naturalWidth * scale))
+      : outputWidth;
+  const outputHeight =
+    preservePortrait && loaded
+      ? Math.max(1, Math.round(loaded.naturalHeight * scale))
+      : Math.round(outputWidth / aspectRatio);
   useEffect(() => {
     if (!source) return;
     const image = new Image();
@@ -61,6 +75,11 @@ export default function ImageUpload({
     if (!loaded || !canvasRef.current) return;
     const canvas = canvasRef.current,
       ctx = canvas.getContext("2d");
+    if (preservePortrait) {
+      ctx.clearRect(0, 0, canvasWidth, outputHeight);
+      ctx.drawImage(loaded, 0, 0, canvasWidth, outputHeight);
+      return;
+    }
     const sourceWidth =
       Math.min(loaded.naturalWidth, loaded.naturalHeight * aspectRatio) / zoom;
     const sourceHeight = sourceWidth / aspectRatio;
@@ -80,7 +99,18 @@ export default function ImageUpload({
       outputWidth,
       outputHeight,
     );
-  }, [loaded, source, zoom, x, y, aspectRatio, outputWidth, outputHeight]);
+  }, [
+    loaded,
+    source,
+    zoom,
+    x,
+    y,
+    aspectRatio,
+    outputWidth,
+    outputHeight,
+    canvasWidth,
+    preservePortrait,
+  ]);
   const choose = (e) => {
     const file = e.target.files?.[0];
     e.target.value = "";
@@ -101,10 +131,16 @@ export default function ImageUpload({
     if (!loaded) return;
     setBusy(true);
     try {
-      onChange(name, canvasRef.current.toDataURL("image/jpeg", 0.85));
+      onChange(
+        name,
+        canvasRef.current.toDataURL(
+          preservePortrait ? "image/webp" : "image/jpeg",
+          preservePortrait ? 0.9 : 0.85,
+        ),
+      );
       close();
       notify(
-        `${label} updated and resized to ${outputWidth} × ${outputHeight}.`,
+        `${label} updated and resized to ${canvasWidth} × ${outputHeight}.`,
       );
     } catch {
       notify("Could not process the image. Try another file.", "error");
@@ -117,7 +153,7 @@ export default function ImageUpload({
       <span className="field-label">{label}</span>
       <div className="image-upload-box">
         <div
-          className={`upload-thumb ${name === "profilePhoto" ? "round" : ""}`}
+          className={`upload-thumb ${preservePortrait ? "portrait-upload-thumb" : name === "profilePhoto" ? "round" : ""}`}
         >
           {value ? (
             <img src={value} alt={`${label} preview`} />
@@ -156,44 +192,62 @@ export default function ImageUpload({
           aria-label={`Upload ${label.toLowerCase()}`}
         />
       </div>
+      {preservePortrait && (
+        <p className="field-hint">
+          Use a transparent PNG or WebP for a background-free portrait. Your
+          full image and transparency are preserved; backgrounds are not
+          removed. Adjust its size and position in Make it yours.
+        </p>
+      )}
       {source && (
-        <Modal title={`Crop your ${label.toLowerCase()}`} onClose={close}>
+        <Modal
+          title={
+            preservePortrait
+              ? "Preview your portrait"
+              : `Crop your ${label.toLowerCase()}`
+          }
+          onClose={close}
+        >
           <p className="muted text-sm mb-5">
-            Move and zoom to find the perfect fit. We’ll resize it for a
-            fast-loading page. Animated images are saved as a still image.
+            {preservePortrait
+              ? "The complete image is kept at its original proportions, including transparent areas. The checkerboard is only a preview. Replace the image if you need a transparent background."
+              : "Move and zoom to find the perfect fit. We’ll resize it for a fast-loading page. Animated images are saved as a still image."}
           </p>
           <div
-            className={`crop-preview ${name === "profilePhoto" ? "crop-round" : ""}`}
+            className={`crop-preview ${preservePortrait ? "portrait-upload-preview" : name === "profilePhoto" ? "crop-round" : ""}`}
             style={
-              aspectRatio !== 1
-                ? {
-                    width: "100%",
-                    height: "auto",
-                    aspectRatio,
-                  }
-                : undefined
+              preservePortrait
+                ? { width: "100%", height: "auto" }
+                : aspectRatio !== 1
+                  ? {
+                      width: "100%",
+                      height: "auto",
+                      aspectRatio,
+                    }
+                  : undefined
             }
           >
-            <canvas ref={canvasRef} width={outputWidth} height={outputHeight} />
+            <canvas ref={canvasRef} width={canvasWidth} height={outputHeight} />
             {!loaded && <LoaderCircle className="spin" />}
           </div>
-          {[
-            ["Zoom", zoom, setZoom, 1, 3, 0.05],
-            ["Horizontal position", x, setX, 0, 100, 1],
-            ["Vertical position", y, setY, 0, 100, 1],
-          ].map(([text, val, setter, min, max, step]) => (
-            <label className="range-field" key={text}>
-              <span>{text}</span>
-              <input
-                type="range"
-                min={min}
-                max={max}
-                step={step}
-                value={val}
-                onChange={(e) => setter(Number(e.target.value))}
-              />
-            </label>
-          ))}
+          {!preservePortrait &&
+            [
+              ["Zoom", zoom, setZoom, 1, 3, 0.05],
+              ["Horizontal position", x, setX, 0, 100, 1],
+              ["Vertical position", y, setY, 0, 100, 1],
+            ].map(([text, val, setter, min, max, step]) => (
+              <label className="range-field" key={text}>
+                <span>{text}</span>
+                <input
+                  type="range"
+                  min={min}
+                  max={max}
+                  step={step}
+                  value={val}
+                  onChange={(e) => setter(Number(e.target.value))}
+                />
+              </label>
+            ))}
           <div className="modal-actions">
             <button className="btn btn-secondary" onClick={close}>
               Cancel

@@ -32,6 +32,14 @@ export function normalizeDesign(value = {}) {
   }
   if (Number.isFinite(value?.radius))
     design.radius = Math.min(28, Math.max(0, value.radius));
+  for (const [key, min, max] of [
+    ["portraitSize", 50, 140],
+    ["portraitX", -35, 35],
+    ["portraitY", -30, 30],
+  ]) {
+    if (Number.isFinite(value?.[key]))
+      design[key] = Math.min(max, Math.max(min, value[key]));
+  }
   design.cover = coverGradient(design);
   return design;
 }

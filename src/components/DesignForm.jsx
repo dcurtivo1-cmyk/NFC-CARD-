@@ -10,6 +10,7 @@ import {
   Wallpaper,
   Shapes,
   Instagram,
+  Move,
 } from "lucide-react";
 import { themes } from "../data/presets";
 import {
@@ -72,6 +73,8 @@ export default function DesignForm({
   design,
   onChange,
   hasCoverPhoto = false,
+  portraitMode = false,
+  portraitSrc = "",
 }) {
   const update = (patch) => {
     const next = { ...design, ...patch };
@@ -81,7 +84,7 @@ export default function DesignForm({
   };
   return (
     <div
-      className="design-form"
+      className={`design-form ${portraitMode ? "portrait-design" : ""}`}
       style={{
         "--design-accent": design.primary,
         "--design-background": design.background,
@@ -100,7 +103,14 @@ export default function DesignForm({
                 type="button"
                 className={`theme-option ${design.id === theme.id ? "selected" : ""}`}
                 key={theme.id}
-                onClick={() => onChange({ ...theme })}
+                onClick={() =>
+                  onChange({
+                    ...theme,
+                    portraitSize: design.portraitSize,
+                    portraitX: design.portraitX,
+                    portraitY: design.portraitY,
+                  })
+                }
                 aria-pressed={design.id === theme.id}
               >
                 <div
@@ -111,10 +121,20 @@ export default function DesignForm({
                     className="theme-cover"
                     style={{ background: theme.cover }}
                   />
-                  <span
-                    className="theme-avatar"
-                    style={{ background: theme.primary }}
-                  />
+                  {portraitMode ? (
+                    portraitSrc && (
+                      <img
+                        className="theme-portrait"
+                        src={portraitSrc}
+                        alt=""
+                      />
+                    )
+                  ) : (
+                    <span
+                      className="theme-avatar"
+                      style={{ background: theme.primary }}
+                    />
+                  )}
                   <i style={{ background: theme.text }} />
                   <i style={{ background: theme.text }} />
                   <b
@@ -135,6 +155,53 @@ export default function DesignForm({
           </div>
         </fieldset>
       </FormSection>
+      {portraitMode && (
+        <FormSection
+          title="Portrait placement"
+          description="Place the complete portrait in front of your banner. Upload a transparent PNG or WebP in Your details."
+          icon={Move}
+        >
+          {[
+            ["portraitSize", "Portrait size", 50, 140],
+            ["portraitX", "Portrait horizontal position", -35, 35],
+            ["portraitY", "Portrait vertical position", -30, 30],
+          ].map(([key, label, min, max]) => (
+            <label className="range-field" key={key}>
+              <span>
+                {label}
+                <output>
+                  {design[key] ?? (key === "portraitSize" ? 100 : 0)}%
+                </output>
+              </span>
+              <input
+                type="range"
+                aria-label={label}
+                min={min}
+                max={max}
+                step="1"
+                value={design[key] ?? (key === "portraitSize" ? 100 : 0)}
+                onChange={(event) =>
+                  update({ [key]: Number(event.target.value) })
+                }
+              />
+            </label>
+          ))}
+          <button
+            type="button"
+            className="btn btn-secondary btn-small"
+            onClick={() =>
+              update({ portraitSize: 100, portraitX: 0, portraitY: 0 })
+            }
+          >
+            Reset portrait position
+          </button>
+          <p className="field-hint">
+            Size keeps the image proportions. Moving or enlarging it can place
+            part of the image outside the banner. Positive vertical values move
+            it up. The information section stays white.
+          </p>
+        </FormSection>
+      )}
       <FormSection
         title="Color palette"
         description="Pair any template with colors that feel like you."
@@ -208,7 +275,18 @@ export default function DesignForm({
         <ChoiceGrid
           label="Header layout"
           kind="header"
-          options={headerLayouts}
+          options={
+            portraitMode
+              ? headerLayouts.map((layout) => ({
+                  ...layout,
+                  name: layout.id === "split" ? "Left aligned" : layout.name,
+                  description:
+                    layout.id === "centered"
+                      ? "A portrait banner with centered details below."
+                      : "A portrait banner with details below.",
+                }))
+              : headerLayouts
+          }
           value={design.headerLayout}
           onChange={(headerLayout) => update({ headerLayout })}
         />

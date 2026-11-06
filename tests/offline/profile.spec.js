@@ -32,10 +32,10 @@ test("an online visit saves the profile and photos for offline reopening and con
   await expect(offline.getByRole("status")).toContainText(
     "Offline — showing saved info.",
   );
-  await expect(offline.locator(".profile-avatar")).toBeVisible();
+  await expect(offline.locator(".profile-portrait")).toBeVisible();
   expect(
     await offline
-      .locator(".profile-avatar")
+      .locator(".profile-portrait")
       .evaluate((image) => image.complete && image.naturalWidth > 0),
   ).toBe(true);
   const downloaded = offline.waitForEvent("download");

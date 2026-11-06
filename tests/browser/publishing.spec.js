@@ -112,7 +112,7 @@ test("failed publication stays editable, retries safely, and remote deletion inv
       "Alex Morgan",
     );
     await expect(
-      other.locator(".public-card-wrap img.profile-avatar"),
+      other.locator(".public-card-wrap img.profile-portrait"),
     ).toBeVisible();
     await page
       .getByRole("button", { name: "Close dialog", exact: true })

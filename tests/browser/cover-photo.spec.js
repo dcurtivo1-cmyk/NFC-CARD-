@@ -49,7 +49,7 @@ test("cover photos crop, replace, persist and render across header layouts", asy
   for (const name of [
     "Classic cover",
     "Centered",
-    "Side by side",
+    "Left aligned",
     "Minimal header",
   ]) {
     await page
@@ -60,8 +60,8 @@ test("cover photos crop, replace, persist and render across header layouts", asy
     await expect(image).toHaveAttribute("src", photo);
   }
   await expect(page.locator(".preview-panel .profile-cover")).toHaveCSS(
-    "height",
-    "116px",
+    "aspect-ratio",
+    "6 / 5",
   );
   await page.getByRole("button", { name: "Warm Sunset", exact: true }).click();
   await expect(image).toHaveAttribute("src", photo);

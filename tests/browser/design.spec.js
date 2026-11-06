@@ -61,7 +61,7 @@ test("design options update the live card and survive draft load and profile gen
     ["Centered", "centered"],
     ["Minimal header", "minimal"],
     ["Classic cover", "classic"],
-    ["Side by side", "split"],
+    ["Left aligned", "split"],
   ]) {
     await page
       .getByRole("group", { name: "Header layout", exact: true })
@@ -72,7 +72,7 @@ test("design options update the live card and survive draft load and profile gen
   const identity = await preview
     .locator(".profile-identity")
     .evaluate((el) => getComputedStyle(el).display);
-  expect(identity).toBe("grid");
+  expect(identity).toBe("block");
 
   for (const [name, id] of [
     ["Compact rows", "compact"],

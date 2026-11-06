@@ -3,6 +3,9 @@ export const designDefaults = {
   buttonLayout: "stacked",
   backgroundStyle: "solid",
   iconStyle: "circle",
+  portraitSize: 100,
+  portraitX: 0,
+  portraitY: 0,
 };
 
 export const headerLayouts = [

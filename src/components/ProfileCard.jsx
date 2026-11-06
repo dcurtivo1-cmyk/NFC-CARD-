@@ -32,6 +32,26 @@ const socialIcons = {
   whatsapp: MessageCircle,
 };
 
+function readableOnWhite(color) {
+  const channels = color
+    .slice(1)
+    .match(/.{2}/g)
+    .map((part) => {
+      const value = parseInt(part, 16) / 255;
+      return value <= 0.04045
+        ? value / 12.92
+        : ((value + 0.055) / 1.055) ** 2.4;
+    });
+  return 1.05 /
+    (0.2126 * channels[0] +
+      0.7152 * channels[1] +
+      0.0722 * channels[2] +
+      0.05) >=
+    4.5
+    ? color
+    : "#302742";
+}
+
 export default function ProfileCard({
   document,
   phone = false,
@@ -39,6 +59,7 @@ export default function ProfileCard({
   publicView = false,
 }) {
   const { details: d, design, type } = document;
+  const portraitMode = type === "card";
   const { headerLayout, buttonLayout, backgroundStyle, iconStyle } = {
     ...designDefaults,
     ...design,
@@ -79,11 +100,22 @@ export default function ProfileCard({
         </div>
       )}
       <article
-        className={`profile-card ${phone ? "in-phone" : ""} button-${design.buttonStyle} header-${headerLayout} links-${buttonLayout} background-${backgroundStyle} icon-${iconStyle} ${d.coverPhoto ? "with-cover-photo" : ""}`}
+        className={`profile-card ${portraitMode ? "portrait-card" : ""} ${phone ? "in-phone" : ""} button-${design.buttonStyle} header-${headerLayout} links-${buttonLayout} background-${backgroundStyle} icon-${iconStyle} ${d.coverPhoto ? "with-cover-photo" : ""}`}
         style={{
           "--profile-primary": design.primary,
-          "--profile-bg": design.background,
-          "--profile-text": design.text,
+          "--profile-bg": portraitMode ? "#ffffff" : design.background,
+          "--profile-text": portraitMode
+            ? readableOnWhite(design.text)
+            : design.text,
+          "--portrait-size": `${design.portraitSize ?? 100}%`,
+          "--portrait-x": `${design.portraitX ?? 0}%`,
+          "--portrait-y": `${design.portraitY ?? 0}%`,
+          "--portrait-cover": design.cover,
+          "--portrait-accent-ink": readableOnWhite(design.primary),
+          "--portrait-button-ink":
+            readableOnWhite(design.primary) === design.primary
+              ? "#ffffff"
+              : "#302742",
           "--profile-radius": `${design.radius}px`,
           "--profile-cover-start": design.coverStart || design.primary,
           "--profile-cover-end": design.coverEnd || design.background,
@@ -91,7 +123,14 @@ export default function ProfileCard({
             ?.family,
         }}
       >
-        <div className="profile-cover" style={{ background: design.cover }}>
+        <div
+          className="profile-cover"
+          style={
+            portraitMode
+              ? { backgroundImage: design.cover }
+              : { background: design.cover }
+          }
+        >
           {d.coverPhoto ? (
             <img
               className="profile-cover-photo"
@@ -104,6 +143,18 @@ export default function ProfileCard({
               <div className="cover-orbit orbit-two" />
             </>
           )}
+          {portraitMode && d.profilePhoto && (
+            <img
+              key={d.profilePhoto}
+              className="profile-portrait"
+              src={d.profilePhoto}
+              alt={`${d.fullName || name} portrait`}
+              onError={(event) => {
+                event.currentTarget.style.visibility = "hidden";
+              }}
+            />
+          )}
+          {portraitMode && <div className="portrait-fade" aria-hidden="true" />}
           {d.logo && (
             <img
               src={d.logo}
@@ -119,28 +170,30 @@ export default function ProfileCard({
         </div>
         <div className="profile-content">
           <div className="profile-identity">
-            <div className="avatar-wrap">
-              {d.profilePhoto ? (
-                <img
-                  className="profile-avatar"
-                  src={d.profilePhoto}
-                  alt={d.fullName || "Profile photo"}
-                  onError={(e) => {
-                    e.currentTarget.style.display = "none";
-                  }}
-                />
-              ) : null}
-              <span className="avatar-fallback" aria-hidden="true">
-                {name
-                  .split(" ")
-                  .map((x) => x[0])
-                  .slice(0, 2)
-                  .join("")}
-              </span>
-              <span className="avatar-badge" aria-hidden="true">
-                <Sparkles size={12} />
-              </span>
-            </div>
+            {!portraitMode && (
+              <div className="avatar-wrap">
+                {d.profilePhoto ? (
+                  <img
+                    className="profile-avatar"
+                    src={d.profilePhoto}
+                    alt={d.fullName || "Profile photo"}
+                    onError={(e) => {
+                      e.currentTarget.style.display = "none";
+                    }}
+                  />
+                ) : null}
+                <span className="avatar-fallback" aria-hidden="true">
+                  {name
+                    .split(" ")
+                    .map((x) => x[0])
+                    .slice(0, 2)
+                    .join("")}
+                </span>
+                <span className="avatar-badge" aria-hidden="true">
+                  <Sparkles size={12} />
+                </span>
+              </div>
+            )}
             <div className="profile-identity-copy">
               <h2 className="profile-name">{name}</h2>
               {(d.position ||

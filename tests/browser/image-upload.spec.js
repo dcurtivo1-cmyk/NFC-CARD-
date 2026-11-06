@@ -74,7 +74,9 @@ test("uploads multiple image formats, handles missing MIME types, and rejects un
       .click();
     await expect(page.getByAltText(file.preview)).toHaveAttribute(
       "src",
-      /^data:image\/jpeg/,
+      file.label === "profile photo"
+        ? /^data:image\/(webp|png)/
+        : /^data:image\/jpeg/,
     );
   }
 
