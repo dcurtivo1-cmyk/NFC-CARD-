@@ -20,7 +20,7 @@ test("an existing local demo can publish without changing its saved design", asy
       ),
     legacy,
   );
-  await page.goto(`/p/${legacy.id}`);
+  await page.goto(`/p/${legacy.id}?manage=1`);
   await page.getByRole("button", { name: "Share & QR", exact: true }).click();
   await expect(
     page.getByRole("button", { name: "Download QR", exact: false }),
@@ -44,6 +44,19 @@ test("an existing local demo can publish without changing its saved design", asy
     await expect(other.locator(".public-card-wrap .profile-card")).toHaveClass(
       /header-centered/,
     );
+    await expect(
+      other.locator(
+        ".site-header, .site-footer, .public-toolbar, .public-heading, .public-demo-notice, .profile-powered",
+      ),
+    ).toHaveCount(0);
+    // The NFC URL stays clean even in the browser that owns this page.
+    await page.goto(url);
+    await expect(page.locator(".profile-landing .profile-name")).toHaveText(
+      "Sunday Studio",
+    );
+    await expect(
+      page.getByRole("button", { name: "Share & QR", exact: true }),
+    ).toHaveCount(0);
   } finally {
     await visitor.close();
   }
@@ -121,7 +134,9 @@ test("failed publication stays editable, retries safely, and remote deletion inv
   }
 });
 
-test("a visitor can retry a missing page after its owner publishes it", async ({ page }) => {
+test("a visitor can retry a missing page after its owner publishes it", async ({
+  page,
+}) => {
   const document = {
     ...createDocument("card", true),
     id: `fl-${crypto.randomUUID()}`,
@@ -133,12 +148,18 @@ test("a visitor can retry a missing page after its owner publishes it", async ({
     route.fulfill({
       status: published ? 200 : 404,
       contentType: "application/json",
-      body: JSON.stringify(published ? { document } : { error: "Page not found." }),
+      body: JSON.stringify(
+        published ? { document } : { error: "Page not found." },
+      ),
     }),
   );
   await page.goto(`/p/${document.id}`);
-  await expect(page.getByRole("heading", { name: "This little page isn’t here yet." })).toBeVisible();
+  await expect(
+    page.getByRole("heading", { name: "This little page isn’t here yet." }),
+  ).toBeVisible();
   published = true;
   await page.getByRole("button", { name: "Try again", exact: true }).click();
-  await expect(page.locator(".public-card-wrap .profile-name")).toHaveText("Alex Morgan");
+  await expect(page.locator(".public-card-wrap .profile-name")).toHaveText(
+    "Alex Morgan",
+  );
 });

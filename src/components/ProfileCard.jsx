@@ -299,17 +299,14 @@ export default function ProfileCard({
               </a>
             )}
           </div>
-          <div className="profile-powered">
-            Made with{" "}
-            <Link to="/">
-              folio<span>.</span>
-            </Link>
-            {publicView && (
-              <span className="profile-demo-label">
-                {document.publishedAt ? "Published page" : "Local demo"}
-              </span>
-            )}
-          </div>
+          {!publicView && (
+            <div className="profile-powered">
+              Made with{" "}
+              <Link to="/">
+                folio<span>.</span>
+              </Link>
+            </div>
+          )}
         </div>
       </article>
       {phone && (

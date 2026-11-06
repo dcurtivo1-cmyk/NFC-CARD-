@@ -160,7 +160,9 @@ test("calling card journey validates, crops, customizes, saves, generates and ex
   await expect(page).toHaveURL(/\/p\/fl-/);
   await expect(page.getByRole("dialog")).toBeVisible();
   const url = await page.getByLabel("Your actual profile URL").inputValue();
-  expect(url).toBe(page.url());
+  const managementUrl = new URL(page.url());
+  expect(managementUrl.searchParams.get("manage")).toBe("1");
+  expect(url).toBe(`${managementUrl.origin}${managementUrl.pathname}`);
   await expect(
     page.getByText("Development link — public hosting needed for NFC.", {
       exact: true,
@@ -223,10 +225,10 @@ test("calling card journey validates, crops, customizes, saves, generates and ex
       () => document.documentElement.scrollWidth <= innerWidth,
     ),
   ).toBe(true);
-  await page
-    .getByRole("link", { name: "My workspace", exact: true })
-    .last()
-    .click();
+  await expect(
+    page.locator(".public-toolbar, .site-header, .site-footer"),
+  ).toHaveCount(0);
+  await page.goto("/dashboard");
   await expect(page.locator(".workspace-card")).toHaveCount(1);
   await page
     .getByRole("button", { name: "Duplicate Jordan Cruz", exact: true })

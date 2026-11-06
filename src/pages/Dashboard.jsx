@@ -270,7 +270,7 @@ export default function Dashboard() {
                 <Link
                   to={
                     doc.status === "generated"
-                      ? `/p/${doc.id}`
+                      ? `/p/${doc.id}?manage=1`
                       : `/editor/${doc.id}`
                   }
                   className="workspace-card-art"

@@ -2913,6 +2913,28 @@ select.input {
 }
 
 /* Public profile and help */
+.profile-landing {
+  min-height: 100vh;
+  min-height: 100svh;
+  padding: 24px 0;
+}
+.profile-landing .public-card-wrap {
+  width: min(100%, 480px);
+  border: 0;
+  box-shadow: none;
+}
+@media (max-width: 480px) {
+  .profile-landing {
+    padding: 0;
+  }
+  .profile-landing .public-card-wrap {
+    border-radius: 0;
+  }
+  .profile-landing .profile-card {
+    min-height: 100vh;
+    min-height: 100svh;
+  }
+}
 .public-profile-page {
   padding-top: 25px;
   padding-bottom: 25px;

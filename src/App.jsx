@@ -44,13 +44,13 @@ export default function App() {
       <FeedbackProvider>
         <Suspense fallback={<Loading />}>
           <Routes>
+            <Route path="p/:id" element={<Profile />} />
             <Route element={<Layout />}>
               <Route index element={<Landing />} />
               <Route path="create" element={<Selection />} />
               <Route path="editor" element={<EditorRoute />} />
               <Route path="editor/:id" element={<EditorRoute />} />
               <Route path="dashboard" element={<Dashboard />} />
-              <Route path="p/:id" element={<Profile />} />
               <Route path="about-demo" element={<AboutDemo />} />
               <Route
                 path="*"

@@ -49,7 +49,7 @@ export default function Profile() {
   useEffect(() => {
     if (params.has("created")) {
       setShare(true);
-      setParams({}, { replace: true });
+      setParams({ manage: "1" }, { replace: true });
     }
   }, [params, setParams]);
   if (state.loading) return <Loading>Opening your page…</Loading>;
@@ -64,7 +64,6 @@ export default function Profile() {
               ? "This little page isn’t here yet."
               : "We couldn’t load this page."
           }
-          action={{ to: "/create", label: "Create your own page" }}
         >
           {state.error ||
             "This page has not been published or has been deleted."}
@@ -78,8 +77,21 @@ export default function Profile() {
       </div>
     );
   const owner = canManagePublishedPage(id) || !doc.publishedAt;
+  const manage = owner && params.get("manage") === "1";
+  if (!manage)
+    return (
+      <main
+        id="main"
+        className="profile-landing"
+        style={{ background: doc.design.background }}
+      >
+        <div className="public-card-wrap">
+          <ProfileCard document={doc} publicView />
+        </div>
+      </main>
+    );
   return (
-    <div className="public-profile-page">
+    <main id="main" className="public-profile-page">
       <div className="section-container">
         <div className="public-toolbar">
           <Link to={owner ? "/dashboard" : "/"} className="back-link">
@@ -138,6 +150,6 @@ export default function Profile() {
           onPublished={(document) => setState({ document })}
         />
       )}
-    </div>
+    </main>
   );
 }
