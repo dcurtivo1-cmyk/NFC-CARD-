@@ -59,6 +59,14 @@ Contact buttons generate real `tel:`, `mailto:`, WhatsApp, website, social, and 
 
 See [docs/PRODUCTION.md](docs/PRODUCTION.md) for the implemented API, hosting configuration and storage limits.
 
+## Offline viewing and contact download
+
+Published profiles save an offline copy after an online visit. Wait for **Available offline on this device** before disconnecting. The same NFC/QR URL can then reopen the profile, uploaded photos and **Save contact** `.vcf` download in that browser without internet. Website, social, map and review destinations still need connectivity. Externally hosted images and Google Fonts are not included; uploaded images and the sample portrait are available offline.
+
+**A first scan on a new phone/browser still needs internet.** A URL stored on an NFC card does not contain the website or contact data. Offline copies belong to each browser and may be removed when site data is cleared or storage is reclaimed. Opening a link inside another app may use separate storage. New edits appear on the next successful online visit. A confirmed deletion clears the visitor's copy when they reconnect; disconnected devices cannot learn about a remote deletion.
+
+Offline support runs in the production build over HTTPS (or localhost), using a service worker. It never caches editing keys or queues writes. Verify with `npm run build`, then `npx playwright test --config playwright.offline.config.js`; these tests use isolated local publishing storage.
+
 ## Hosting
 
 `npm run build` produces the React frontend and `dist/server/index.js`, a Cloudflare Worker with embedded assets and the publishing API. Sites provisions the `DB` D1 binding declared in `.openai/hosting.json` and applies the versioned SQL in `drizzle/`. Publish the Worker through Sites; the server serves direct links and reloads at `/p/:id` and `/editor/:id`.

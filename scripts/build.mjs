@@ -1,6 +1,13 @@
 import { spawnSync } from "node:child_process";
 import { createRequire } from "node:module";
-import { readdirSync, readFileSync, mkdirSync, copyFileSync } from "node:fs";
+import {
+  readdirSync,
+  readFileSync,
+  writeFileSync,
+  mkdirSync,
+  copyFileSync,
+} from "node:fs";
+import { createHash } from "node:crypto";
 import { resolve, relative, extname, dirname } from "node:path";
 
 const require = createRequire(import.meta.url);
@@ -37,6 +44,19 @@ function collect(directory) {
   }
 }
 collect(resolve("dist"));
+const shellUrls = Object.keys(assets).filter((path) =>
+  /\.(html|js|css|svg|png)$/.test(path),
+);
+const shellVersion = createHash("sha256")
+  .update(JSON.stringify(assets))
+  .digest("hex")
+  .slice(0, 16);
+const serviceWorker = `const SHELL_CACHE = "folio-shell-${shellVersion}";\nconst SHELL_URLS = ${JSON.stringify(shellUrls)};\n${readFileSync("server/offline-worker.js", "utf8")}`;
+writeFileSync("dist/sw.js", serviceWorker);
+assets["/sw.js"] = {
+  body: Buffer.from(serviceWorker).toString("base64"),
+  type: "text/javascript; charset=utf-8",
+};
 await build({
   entryPoints: ["worker/index.js"],
   outfile: "dist/server/index.js",

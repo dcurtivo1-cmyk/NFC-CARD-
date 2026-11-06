@@ -57,7 +57,10 @@ async function requestPage(id, options = {}) {
       error.status = response.status;
       throw error;
     }
-    return data;
+    return {
+      ...data,
+      offline: response.headers.get("X-Folio-Offline") === "1",
+    };
   } finally {
     clearTimeout(timeout);
     options.signal?.removeEventListener("abort", cancel);
@@ -111,7 +114,7 @@ export async function fetchPublishedPage(id, signal) {
   const document = normalizeDocument(data.document);
   if (!document?.publishedAt || document.id !== id)
     throw new Error("The server returned an invalid published page.");
-  return document;
+  return { ...document, offline: data.offline };
 }
 export async function deletePublishedPage(id) {
   const savedKeys = keys();

@@ -2913,6 +2913,14 @@ select.input {
 }
 
 /* Public profile and help */
+.profile-offline-status {
+  max-width: 480px;
+  margin: 16px auto 0;
+  padding: 0 24px 16px;
+  text-align: center;
+  font-size: 12px;
+  opacity: 0.8;
+}
 .profile-landing {
   min-height: 100vh;
   min-height: 100svh;

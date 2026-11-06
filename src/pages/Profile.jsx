@@ -12,6 +12,7 @@ import { canManagePublishedPage, fetchPublishedPage } from "../lib/publishing";
 import { DemoNotice, EmptyState, Loading } from "../components/UI";
 import ProfileCard from "../components/ProfileCard";
 import ShareModal from "../components/ShareModal";
+import { savePageOffline } from "../lib/offline";
 
 export default function Profile() {
   const { id } = useParams();
@@ -19,6 +20,19 @@ export default function Profile() {
   const [share, setShare] = useState(params.get("created") === "1");
   const [state, setState] = useState({ loading: true });
   const [attempt, setAttempt] = useState(0);
+  const [offlineReady, setOfflineReady] = useState(false);
+  useEffect(() => {
+    let current = true;
+    setOfflineReady(false);
+    if (state.document?.publishedAt) {
+      savePageOffline(state.document.id).then((ready) => {
+        if (current) setOfflineReady(ready);
+      });
+    }
+    return () => {
+      current = false;
+    };
+  }, [state.document]);
   useEffect(() => {
     const controller = new AbortController();
     async function refresh() {
@@ -88,6 +102,17 @@ export default function Profile() {
         <div className="public-card-wrap">
           <ProfileCard document={doc} publicView />
         </div>
+        {(offlineReady || doc.offline) && (
+          <p
+            className="profile-offline-status"
+            role="status"
+            style={{ color: doc.design.text }}
+          >
+            {doc.offline
+              ? "Offline — showing saved info. Website links need internet."
+              : "Available offline on this device."}
+          </p>
+        )}
       </main>
     );
   return (
