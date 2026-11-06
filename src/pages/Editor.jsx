@@ -31,7 +31,6 @@ import {
   saveDocument,
 } from "../lib/storage";
 import { validateDetails } from "../lib/profile";
-import { publishPage } from "../lib/publishing";
 import { DemoNotice, EmptyState, Modal, useFeedback } from "../components/UI";
 import ProductIcon from "../components/ProductIcon";
 import ProfileCard from "../components/ProfileCard";
@@ -155,26 +154,14 @@ export default function Editor() {
     window.scrollTo({ top: 90, behavior: "smooth" });
   };
   const persist = async (generate) => {
-    if ((generate || document.publishedAt) && !validate()) return;
+    if (generate && !validate()) return;
     setBusy(true);
     try {
-      let saved = saveDocument(
+      const saved = saveDocument(
         document,
         generate || document.status === "generated" ? "generated" : "draft",
       );
       setDocument(saved);
-      if (generate || saved.publishedAt) {
-        saved = await publishPage(saved);
-        setDocument(saved);
-        try {
-          saveDocument(saved, "generated");
-        } catch {
-          notify(
-            "Published successfully, but the local workspace could not save its publishing status. Keep your private edit key in this browser.",
-            "info",
-          );
-        }
-      }
       setDirty(false);
       try {
         cacheEditor(saved);
@@ -184,16 +171,14 @@ export default function Editor() {
       if (generate) {
         notify(
           document.status === "generated"
-            ? "Your published page has been updated at the same URL."
-            : "Your demo is published. Your link and QR are ready!",
+            ? "Your demo has been updated."
+            : "Your little page is ready. Demo generated!",
         );
         navigate(`/p/${saved.id}?created=1`);
       } else
         notify(
           document.status === "generated"
-            ? saved.publishedAt
-              ? "Changes saved and published at the same URL."
-              : "Changes saved to your local demo. Generate to publish it."
+            ? "Changes saved to your local profile."
             : "Draft saved to your workspace. Pick up right where you left off.",
         );
     } catch (e) {
@@ -215,7 +200,6 @@ export default function Editor() {
       id: doc.id,
       status: doc.status,
       createdAt: doc.createdAt,
-      publishedAt: doc.publishedAt,
     }));
     setErrors({});
     setStep(0);
@@ -386,9 +370,9 @@ export default function Editor() {
               <div className="review-note">
                 <ShieldCheck size={20} />
                 <p>
-                  <strong>Publish for NFC and QR sharing.</strong>Generating
-                  uploads your page and photos for anyone with the link to see.
-                  Updates keep the same URL, so your NFC card keeps working.
+                  <strong>Private to your browser.</strong>Your profile is saved
+                  locally. Opening this link on another device requires a
+                  production backend, as explained in the sharing dialog.
                 </p>
               </div>
               <button
@@ -407,7 +391,7 @@ export default function Editor() {
                 <ArrowUpRight size={17} />
               </button>
               <span className="generate-caption">
-                Drafts stay in this browser. Generate to publish your page.
+                No sign-up. No backend. A real, working prototype.
               </span>
             </div>
           )}
@@ -483,14 +467,15 @@ export default function Editor() {
             </p>
             <h3>Generate demo</h3>
             <p>
-              Publish your page and images at a permanent URL. Download its QR
-              code, copy its URL for an NFC card, or export a contact file.
+              Save a profile that opens at a unique route. Download its QR code,
+              copy its URL, or export a contact file.
             </p>
             <h3>Sharing beyond this browser</h3>
             <p>
-              Generated pages are uploaded to the publishing server. Anyone with
-              the link can open them. Keep this browser's site data: it holds
-              your drafts and private keys for updating published pages.
+              This prototype uses localStorage. A URL or QR code has the correct
+              destination, but its profile data only exists in this browser. A
+              deployed app needs a persistent database and media storage for
+              real public sharing.
             </p>
             <h3>Your images</h3>
             <p>

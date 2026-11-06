@@ -72,7 +72,7 @@ export default function Layout() {
           <span>A little page. A lasting impression.</span>
           <div>
             <span className="footer-demo">
-              <i /> Built for your next connection
+              <i /> Built for a local demo
             </span>
             <Link to="/about-demo">
               About this prototype <ArrowUpRight size={13} />

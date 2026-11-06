@@ -1,9 +1,6 @@
 node_modules/
 .npm-cache/
 dist/
-.folio-data/
-site-deploy.tar.gz
-sites-checkout/
 test-results/
 playwright-report/
 .env*

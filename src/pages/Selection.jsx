@@ -153,7 +153,7 @@ export default function Selection() {
           </button>
           <div className="mode-footer">
             <FileText size={15} />
-            No account needed. Save drafts locally, then generate to publish.
+            No account needed. Saved only in this browser.
           </div>
         </Modal>
       )}

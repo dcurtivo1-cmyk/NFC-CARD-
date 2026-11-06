@@ -70,7 +70,6 @@ test("calling card journey validates, crops, customizes, saves, generates and ex
   page,
   context,
 }) => {
-  test.setTimeout(90_000);
   const errors = [];
   page.on("pageerror", (err) => errors.push(err.message));
   await page.goto("/create?type=card");
@@ -162,9 +161,7 @@ test("calling card journey validates, crops, customizes, saves, generates and ex
   const url = await page.getByLabel("Your actual profile URL").inputValue();
   expect(url).toBe(page.url());
   await expect(
-    page.getByText("Development link — public hosting needed for NFC.", {
-      exact: true,
-    }),
+    page.getByText("This is a local demo link.", { exact: true }),
   ).toBeVisible();
   const pngPromise = page.waitForEvent("download");
   await page
@@ -240,12 +237,11 @@ test("calling card journey validates, crops, customizes, saves, generates and ex
   const privateContext = await context.browser().newContext();
   const otherPage = await privateContext.newPage();
   await otherPage.goto(url);
-  await expect(otherPage.locator(".public-card-wrap .profile-name")).toHaveText(
-    "Jordan Updated",
-  );
   await expect(
-    otherPage.getByRole("link", { name: "Edit page", exact: true }),
-  ).toHaveCount(0);
+    otherPage.getByRole("heading", {
+      name: "This little page isn’t here yet.",
+    }),
+  ).toBeVisible();
   await privateContext.close();
   expect(errors).toEqual([]);
 });
@@ -310,7 +306,7 @@ test("mobile menu editor persists items, confirms reset, and recovers a draft", 
   await expect(page.locator(".workspace-card")).toHaveCount(1);
 });
 
-test("every non-card product can generate a distinct published profile", async ({
+test("every non-card product can generate a distinct local profile", async ({
   page,
 }) => {
   for (const type of ["menu", "brochure", "review", "social", "nfc"]) {
