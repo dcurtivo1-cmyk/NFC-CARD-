@@ -1,6 +1,9 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { relayPublishing } from "../server/publishing-relay.js";
+import {
+  relayPublishing,
+  PUBLIC_SITE_ORIGIN,
+} from "../server/publishing-relay.js";
 import { handlePagesApi } from "../server/pages-api.js";
 import { openLocalDatabase } from "../server/local-db.js";
 import { createDocument } from "../src/data/presets.js";
@@ -20,9 +23,9 @@ test("local publishing returns a public NFC URL and forwards only necessary head
         },
         body: JSON.stringify(createDocument("card", true)),
       }),
-      "https://public.example",
+      PUBLIC_SITE_ORIGIN,
       async (url, options) => {
-        assert.equal(url.origin, "https://public.example");
+        assert.equal(url.origin, PUBLIC_SITE_ORIGIN);
         assert.equal(options.headers.get("Cookie"), null);
         assert.equal(options.headers.get("Origin"), null);
         assert.equal(
@@ -36,17 +39,16 @@ test("local publishing returns a public NFC URL and forwards only necessary head
     const { document } = await response.json();
     assert.equal(
       document.publishedUrl,
-      "https://public.example/p/fl-12345678-1234-4234-8234-123456789abc",
+      "https://nfc-card-five.vercel.app/p/fl-12345678-1234-4234-8234-123456789abc",
     );
     const visitor = await handlePagesApi(
-      new Request("https://public.example" + path),
+      new Request(PUBLIC_SITE_ORIGIN + path),
       db,
     );
     assert.equal(visitor.status, 200);
-    assert.equal(
-      (await visitor.json()).document.details.fullName,
-      "Alex Morgan",
-    );
+    const publicDocument = (await visitor.json()).document;
+    assert.equal(publicDocument.details.fullName, "Alex Morgan");
+    assert.equal(publicDocument.publishedUrl, document.publishedUrl);
   } finally {
     db.close();
   }

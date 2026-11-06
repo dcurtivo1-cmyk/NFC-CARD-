@@ -1,3 +1,5 @@
+import { preferredPublicUrl } from "./public-url.js";
+
 export function safeUrl(value) {
   if (!value || typeof value !== "string") return "";
   const text = value.trim();
@@ -73,10 +75,12 @@ export function validateDetails(details, type = "card") {
 }
 
 export function profileUrl(id) {
-  return new URL(
-    `${import.meta.env.BASE_URL}p/${encodeURIComponent(id)}`,
-    window.location.origin,
-  ).href;
+  return preferredPublicUrl(
+    new URL(
+      `${import.meta.env.BASE_URL}p/${encodeURIComponent(id)}`,
+      window.location.origin,
+    ).href,
+  );
 }
 
 const escapeVCard = (value) =>

@@ -11,6 +11,7 @@ import {
 import { Modal, useFeedback } from "./UI";
 import { isPublicHost, publishPage } from "../lib/publishing";
 import { saveDocument } from "../lib/storage";
+import { preferredPublicUrl } from "../lib/public-url";
 import {
   copyText,
   downloadBlob,
@@ -26,7 +27,8 @@ export default function ShareModal({
   const [document, setDocument] = useState(initialDocument);
   const [publishing, setPublishing] = useState(false);
   const published = Boolean(document.publishedAt);
-  const url = document.publishedUrl || profileUrl(document.id);
+  const url =
+    preferredPublicUrl(document.publishedUrl) || profileUrl(document.id);
   const publicHost = isPublicHost(url);
   const qrRef = useRef();
   const [copied, setCopied] = useState(false);

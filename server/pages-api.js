@@ -1,5 +1,6 @@
 import { normalizeDocument } from "../src/lib/storage.js";
 import { validateDetails } from "../src/lib/profile.js";
+import { preferredPublicUrl } from "../src/lib/public-url.js";
 
 export const MAX_PAGE_BYTES = 1_500_000;
 const idPattern = /^fl-[a-f0-9-]{36}$/i;
@@ -73,7 +74,9 @@ export async function handlePagesApi(request, db) {
         ? json({
             document: {
               ...JSON.parse(row.document),
-              publishedUrl: new URL(`/p/${id}`, url.origin).href,
+              publishedUrl: preferredPublicUrl(
+                new URL(`/p/${id}`, url.origin).href,
+              ),
             },
           })
         : json(
@@ -167,7 +170,7 @@ export async function handlePagesApi(request, db) {
       details: document.details,
       design: document.design,
       publishedAt: timestamp,
-      publishedUrl: new URL(`/p/${id}`, url.origin).href,
+      publishedUrl: preferredPublicUrl(new URL(`/p/${id}`, url.origin).href),
       updatedAt: timestamp,
     };
     const result = await db

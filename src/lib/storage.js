@@ -1,5 +1,6 @@
 import { blankDetails, products } from "../data/presets.js";
 import { normalizeDesign } from "./design.js";
+import { preferredPublicUrl } from "./public-url.js";
 
 export const STORAGE_KEY = "folio-studio-documents-v1";
 const LAST_KEY = "folio-studio-editor-v1";
@@ -48,11 +49,7 @@ export function normalizeDocument(value) {
     updatedAt: value.updatedAt || null,
     publishedAt:
       typeof value.publishedAt === "string" ? value.publishedAt : null,
-    publishedUrl:
-      typeof value.publishedUrl === "string" &&
-      /^https?:\/\//i.test(value.publishedUrl)
-        ? value.publishedUrl
-        : null,
+    publishedUrl: preferredPublicUrl(value.publishedUrl),
   };
 }
 
