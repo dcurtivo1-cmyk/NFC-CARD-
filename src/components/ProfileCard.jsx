@@ -305,7 +305,9 @@ export default function ProfileCard({
               folio<span>.</span>
             </Link>
             {publicView && (
-              <span className="profile-demo-label">Local demo</span>
+              <span className="profile-demo-label">
+                {document.publishedAt ? "Published page" : "Local demo"}
+              </span>
             )}
           </div>
         </div>

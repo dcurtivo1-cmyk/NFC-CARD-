@@ -1,7 +1,11 @@
 {
   "rewrites": [
     {
-      "source": "/((?!assets/|favicon.svg|alex-portrait.svg).*)",
+      "source": "/api/pages/:id",
+      "destination": "https://folio-nfc-studio.buffhutch.chatgpt.site/api/pages/:id"
+    },
+    {
+      "source": "/((?!api/|assets/|favicon.svg|alex-portrait.svg).*)",
       "destination": "/index.html"
     }
   ]

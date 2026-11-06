@@ -69,8 +69,8 @@ export default function Landing() {
             </span>
           </div>
           <div className="hero-local-note">
-            <span className="status-dot" /> A working local demo. Your
-            creativity, your browser.
+            <span className="status-dot" /> Your creativity, ready to share with
+            an NFC card or QR code.
           </div>
         </div>
         <div className="hero-visual">

@@ -3,6 +3,7 @@ import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import { createRequire } from "node:module";
 import { resolve } from "node:path";
+import { publishingApi } from "./server/vite-publishing.js";
 
 const nodeRequire = createRequire(import.meta.url);
 
@@ -25,7 +26,7 @@ const workspaceDependencyResolver = {
 };
 
 export default defineConfig({
-  plugins: [react(), tailwindcss()],
+  plugins: [react(), tailwindcss(), publishingApi()],
   optimizeDeps: {
     esbuildOptions: { plugins: [workspaceDependencyResolver] },
   },

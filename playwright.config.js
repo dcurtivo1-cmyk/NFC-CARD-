@@ -15,7 +15,7 @@ export default defineConfig({
   expect: { timeout: 8_000 },
   reporter: "list",
   use: {
-    baseURL: "http://127.0.0.1:5173",
+    baseURL: "http://127.0.0.1:5180",
     launchOptions: {
       executablePath:
         process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH || systemChrome,
@@ -33,9 +33,10 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: "npm run dev -- --port 5173 --strictPort",
-    url: "http://127.0.0.1:5173",
-    reuseExistingServer: !process.env.CI,
+    command: "npm run dev -- --port 5180 --strictPort",
+    url: "http://127.0.0.1:5180",
+    reuseExistingServer: false,
+    env: { FOLIO_LOCAL_PUBLISHING: "1" },
     timeout: 30_000,
   },
 });
