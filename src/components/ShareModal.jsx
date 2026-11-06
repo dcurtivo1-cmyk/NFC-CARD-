@@ -9,6 +9,8 @@ import {
   LoaderCircle,
 } from "lucide-react";
 import { Modal, useFeedback } from "./UI";
+import { isPublicHost, publishPage } from "../lib/publishing";
+import { saveDocument } from "../lib/storage";
 import {
   copyText,
   downloadBlob,
@@ -16,18 +18,49 @@ import {
   profileUrl,
 } from "../lib/profile";
 
-export default function ShareModal({ document, onClose }) {
+export default function ShareModal({
+  document: initialDocument,
+  onClose,
+  onPublished,
+}) {
+  const [document, setDocument] = useState(initialDocument);
+  const [publishing, setPublishing] = useState(false);
+  const published = Boolean(document.publishedAt);
+  const publicHost = isPublicHost();
   const url = profileUrl(document.id);
   const qrRef = useRef();
   const [copied, setCopied] = useState(false);
   const [downloading, setDownloading] = useState(false);
   const { notify } = useFeedback();
+  const publish = async () => {
+    setPublishing(true);
+    try {
+      const next = await publishPage(document);
+      setDocument(next);
+      onPublished?.(next);
+      try {
+        saveDocument(next, "generated");
+      } catch {
+        notify(
+          "Published, but the local publishing status could not be saved.",
+          "info",
+        );
+      }
+      notify("Your page is published. Updates will keep the same URL.");
+    } catch (error) {
+      notify(error.message, "error");
+    } finally {
+      setPublishing(false);
+    }
+  };
   const copy = async () => {
     try {
       await copyText(url);
       setCopied(true);
       notify(
-        "Profile URL copied. It opens where this browser’s profile data is saved.",
+        publicHost
+          ? "Published URL copied. Write this URL to your NFC card."
+          : "Development URL copied. Use a public HTTPS host for NFC cards.",
       );
     } catch (e) {
       notify(e.message, "error");
@@ -78,78 +111,102 @@ export default function ShareModal({ document, onClose }) {
   return (
     <Modal title="A little page, ready to go." onClose={onClose}>
       <p className="muted text-sm">
-        Your demo has been saved. Here’s your link and its matching QR code.
+        {published
+          ? "Your page is published. Use the same link for your NFC card and QR code."
+          : "Publish this saved demo so anyone with the link can open it."}
       </p>
-      <div className="share-qr" ref={qrRef}>
-        <QRCodeSVG
-          value={url}
-          size={184}
-          level="M"
-          marginSize={4}
-          title={`QR code for ${document.details.fullName}`}
-        />
-        <span>{document.details.displayName || document.details.fullName}</span>
-      </div>
-      <label className="field-label" htmlFor="share-url">
-        Your actual profile URL
-      </label>
-      <div className="copy-input">
-        <LinkIcon size={16} />
-        <input
-          id="share-url"
-          readOnly
-          value={url}
-          onFocus={(e) => e.target.select()}
-        />
-        <button
-          className="icon-button"
-          onClick={copy}
-          aria-label="Copy shareable URL"
-        >
-          {copied ? <Check size={17} /> : <Copy size={17} />}
-        </button>
-      </div>
-      <div className="share-downloads">
+      {!published && (
         <button
           className="btn btn-primary"
-          disabled={downloading}
-          onClick={() => downloadQR("png")}
+          disabled={publishing}
+          onClick={publish}
         >
-          {downloading ? (
-            <LoaderCircle size={16} className="spin" />
-          ) : (
-            <Download size={16} />
-          )}
-          Download QR · PNG
+          {publishing && <LoaderCircle size={16} className="spin" />}{" "}
+          {publishing ? "Publishing…" : "Publish page"}
         </button>
-        <button className="btn btn-secondary" onClick={() => downloadQR("svg")}>
-          SVG
-        </button>
-      </div>
-      <div className="share-other-actions">
-        <a href={url} target="_blank" rel="noopener noreferrer">
-          Open profile <ExternalLink size={14} />
-        </a>
-        {document.type === "card" && (
-          <button
-            onClick={() => {
-              downloadVCard(document.details);
-              notify("Contact downloaded.");
-            }}
-          >
-            Export contact (.vcf) <Download size={14} />
-          </button>
-        )}
-      </div>
-      <div className="share-warning">
-        <strong>This is a local demo link.</strong>
-        <p>
-          It works in this browser while its saved data exists. A scan on
-          another device won’t have that data. Deploying the site alone does not
-          publish profiles; persistent backend storage is required for public,
-          cross-device sharing.
-        </p>
-      </div>
+      )}
+      {published && (
+        <>
+          <div className="share-qr" ref={qrRef}>
+            <QRCodeSVG
+              value={url}
+              size={184}
+              level="M"
+              marginSize={4}
+              title={`QR code for ${document.details.fullName}`}
+            />
+            <span>
+              {document.details.displayName || document.details.fullName}
+            </span>
+          </div>
+          <label className="field-label" htmlFor="share-url">
+            Your actual profile URL
+          </label>
+          <div className="copy-input">
+            <LinkIcon size={16} />
+            <input
+              id="share-url"
+              readOnly
+              value={url}
+              onFocus={(e) => e.target.select()}
+            />
+            <button
+              className="icon-button"
+              onClick={copy}
+              aria-label="Copy shareable URL"
+            >
+              {copied ? <Check size={17} /> : <Copy size={17} />}
+            </button>
+          </div>
+          <div className="share-downloads">
+            <button
+              className="btn btn-primary"
+              disabled={downloading}
+              onClick={() => downloadQR("png")}
+            >
+              {downloading ? (
+                <LoaderCircle size={16} className="spin" />
+              ) : (
+                <Download size={16} />
+              )}
+              Download QR · PNG
+            </button>
+            <button
+              className="btn btn-secondary"
+              onClick={() => downloadQR("svg")}
+            >
+              SVG
+            </button>
+          </div>
+          <div className="share-other-actions">
+            <a href={url} target="_blank" rel="noopener noreferrer">
+              Open profile <ExternalLink size={14} />
+            </a>
+            {document.type === "card" && (
+              <button
+                onClick={() => {
+                  downloadVCard(document.details);
+                  notify("Contact downloaded.");
+                }}
+              >
+                Export contact (.vcf) <Download size={14} />
+              </button>
+            )}
+          </div>
+          <div className="share-warning">
+            <strong>
+              {publicHost
+                ? "Ready for your NFC card."
+                : "Development link — public hosting needed for NFC."}
+            </strong>
+            <p>
+              {publicHost
+                ? "In your NFC writing app, choose URL / Website and paste this link. Write it to the card, then tap it with another phone to open your page. Future published edits keep this URL."
+                : "This page is saved on the development server. Publish the app with its database on a public HTTPS domain, then generate your NFC link there. A localhost or private-network URL will not work on other phones."}
+            </p>
+          </div>
+        </>
+      )}
     </Modal>
   );
 }

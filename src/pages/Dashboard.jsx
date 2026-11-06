@@ -17,6 +17,7 @@ import {
   AlertCircle,
 } from "lucide-react";
 import { products } from "../data/presets";
+import { deletePublishedPage } from "../lib/publishing";
 import {
   deleteDocument,
   readDocuments,
@@ -93,14 +94,19 @@ export default function Dashboard() {
     if (
       !(await confirm({
         title: "Delete this little page?",
-        message: `“${doc.details.displayName || doc.details.fullName || "Untitled page"}” will be removed from this browser. Its local profile link will stop opening. This can’t be undone.`,
+        message: `“${doc.details.displayName || doc.details.fullName || "Untitled page"}” will be deleted${doc.publishedAt ? " from the publishing server and this browser. Its NFC and QR link will stop working" : " from this browser"}. This can’t be undone.`,
         label: "Delete page",
       }))
     )
       return;
     try {
+      if (doc.publishedAt) await deletePublishedPage(doc.id);
       deleteDocument(doc.id);
-      notify("Page deleted from this browser.");
+      notify(
+        doc.publishedAt
+          ? "Published page deleted. Its NFC and QR link is no longer active."
+          : "Page deleted from this browser.",
+      );
     } catch (e) {
       notify(e.message, "error");
     }
@@ -110,6 +116,7 @@ export default function Dashboard() {
       const copy = structuredClone(doc);
       copy.id = null;
       copy.createdAt = null;
+      copy.publishedAt = null;
       copy.details.fullName = `${copy.details.fullName || "Untitled"} (copy)`;
       copy.details.displayName = copy.details.displayName
         ? `${copy.details.displayName} (copy)`
@@ -308,7 +315,11 @@ export default function Dashboard() {
                   </div>
                   <span className={`document-status ${doc.status}`}>
                     <i />
-                    {doc.status === "generated" ? "Generated demo" : "Draft"}
+                    {doc.publishedAt
+                      ? "Published"
+                      : doc.status === "generated"
+                        ? "Local demo"
+                        : "Draft"}
                   </span>
                 </Link>
                 <div className="workspace-card-body">
@@ -372,8 +383,8 @@ export default function Dashboard() {
         </div>
       )}
       <p className="workspace-footnote">
-        No accounts, no cloud sync. Clearing this site’s browser data removes
-        your saved pages.
+        Drafts and private editing keys stay in this browser. Published pages
+        remain online; clearing site data removes your ability to edit them.
       </p>
       {share && <ShareModal document={share} onClose={() => setShare(null)} />}
     </div>

@@ -208,10 +208,10 @@ export function DemoNotice({ compact = false }) {
     <div className={`demo-notice ${compact ? "compact" : ""}`}>
       <span className="status-dot" />
       <span>
-        <strong>Local demo</strong>
+        <strong>NFC-ready pages</strong>
         {compact
-          ? " · Saved in this browser"
-          : " — Your work stays in this browser. Shared profiles need this browser’s saved data; cross-device access requires a backend."}
+          ? " · Generate to publish"
+          : " — Drafts stay in this browser. Generate your page to publish a link for NFC cards and QR sharing."}
       </span>
     </div>
   );

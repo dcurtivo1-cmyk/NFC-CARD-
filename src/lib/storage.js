@@ -46,6 +46,8 @@ export function normalizeDocument(value) {
     design,
     createdAt: value.createdAt || null,
     updatedAt: value.updatedAt || null,
+    publishedAt:
+      typeof value.publishedAt === "string" ? value.publishedAt : null,
   };
 }
 
