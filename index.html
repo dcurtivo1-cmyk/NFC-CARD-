@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#7456e8" />
+    <script>
+      // Set the interface mode before the first paint. Keep the same key as
+      // ColorModeToggle; card and page design settings remain independent.
+      (() => {
+        let preference;
+        try {
+          preference = localStorage.getItem("folio-studio-color-mode");
+        } catch {}
+        const dark =
+          preference === "dark" ||
+          (preference !== "light" &&
+            window.matchMedia("(prefers-color-scheme: dark)").matches);
+        document.documentElement.dataset.colorMode = dark ? "dark" : "light";
+        document
+          .querySelector('meta[name="theme-color"]')
+          .setAttribute("content", dark ? "#15131d" : "#fbfaf8");
+      })();
+    </script>
+    <meta
+      name="description"
+      content="Make your next introduction unforgettable. Create a digital business card, menu, or little home for your links with Folio Studio."
+    />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>Folio — A little page. A lasting impression.</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

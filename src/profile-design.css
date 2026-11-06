@@ -1,0 +1,728 @@
+/* Template and independent design controls */
+.design-form fieldset {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
+.design-form .theme-grid {
+  gap: 16px;
+}
+.design-form .theme-art {
+  height: 130px;
+}
+.design-form .theme-option > span {
+  font-size: 11px;
+  line-height: 1.6;
+}
+.template-centered .theme-avatar {
+  left: calc(50% - 11px);
+}
+.template-centered > i {
+  margin-inline: auto;
+}
+.template-minimal .theme-cover {
+  background: transparent !important;
+  height: 23px;
+}
+.template-minimal .theme-avatar {
+  top: 11px;
+}
+.template-split .theme-cover {
+  height: 22px;
+}
+.template-split .theme-avatar {
+  top: 35px;
+  width: 26px;
+  height: 26px;
+}
+.template-split > i {
+  margin-left: 37px;
+  width: 55%;
+  margin-top: 19px;
+}
+.template-split > i + i {
+  margin-top: 6px;
+  width: 42%;
+}
+.template-split > b {
+  margin-top: 19px;
+}
+.template-buttons-grid > b {
+  width: 47%;
+  box-shadow: 61px 0 0 color-mix(in srgb, currentColor 12%, transparent);
+}
+.template-buttons-compact > b {
+  height: 11px;
+}
+.palette-options {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 11px;
+}
+.palette-option {
+  border: 1px solid #e9e0f1;
+  border-radius: 8px;
+  padding: 8px;
+  background: #fffdfa;
+  text-align: left;
+}
+.palette-option:hover,
+.palette-option.selected {
+  border-color: #ac8bce;
+  background: #faf6ff;
+}
+.palette-option.selected {
+  box-shadow: 0 0 0 1px #ac8bce;
+}
+.palette-swatches {
+  display: flex;
+  overflow: hidden;
+  height: 26px;
+  border-radius: 4px;
+  border: 1px solid #e8e1ed;
+}
+.palette-swatches > i {
+  flex: 1;
+}
+.palette-option > span:last-child {
+  display: block;
+  margin-top: 7px;
+  font-size: 10px;
+  line-height: 1.6;
+  color: #766183;
+}
+.design-custom-label {
+  font-size: 11px;
+  color: #81718d;
+  margin: 23px 0 15px;
+}
+.design-choice-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+.design-choice {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  position: relative;
+  padding: 12px;
+  border: 1px solid #e8deef;
+  border-radius: 8px;
+  text-align: left;
+  background: #fffdfa;
+}
+.design-choice:hover,
+.design-choice.selected {
+  border-color: #b39acb;
+  background: #faf6ff;
+}
+.design-choice.selected {
+  box-shadow: 0 0 0 1px #b39acb;
+}
+.design-choice > strong {
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.6;
+  color: #776084;
+  margin-top: 10px;
+}
+.design-choice > small {
+  font-size: 10px;
+  line-height: 1.7;
+  color: #897793;
+  margin-top: 4px;
+}
+.design-choice-check {
+  position: absolute;
+  right: 8px;
+  top: 8px;
+  display: grid;
+  place-items: center;
+  background: #9673b6;
+  color: white;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+}
+.choice-illustration {
+  height: 57px;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  border-radius: 5px;
+  background: #f2ecf9;
+}
+.choice-illustration > i,
+.choice-illustration > b,
+.choice-illustration > em,
+.choice-illustration > span {
+  position: absolute;
+  display: block;
+}
+.illustration-header > i {
+  height: 20px;
+  inset: 0 0 auto;
+  background: #d9c9eb;
+}
+.illustration-header > b {
+  width: 19px;
+  height: 19px;
+  left: 12px;
+  top: 11px;
+  border-radius: 50%;
+  border: 2px solid #f2ecf9;
+  background: #a38bbd;
+}
+.illustration-header > em {
+  width: 42%;
+  height: 4px;
+  top: 35px;
+  left: 12px;
+  border-radius: 3px;
+  background: #a895ba;
+}
+.illustration-header > span {
+  width: 61%;
+  height: 3px;
+  top: 44px;
+  left: 12px;
+  border-radius: 3px;
+  background: #d5c8e1;
+}
+.illustration-header.option-centered > b {
+  left: calc(50% - 10px);
+}
+.illustration-header.option-centered > em {
+  left: 29%;
+}
+.illustration-header.option-centered > span {
+  left: 20%;
+}
+.illustration-header.option-split > i {
+  height: 12px;
+}
+.illustration-header.option-split > b {
+  top: 24px;
+}
+.illustration-header.option-split > em {
+  top: 28px;
+  left: 39px;
+}
+.illustration-header.option-split > span {
+  top: 38px;
+  left: 39px;
+  width: 40%;
+}
+.illustration-header.option-minimal > i {
+  display: none;
+}
+.illustration-header.option-minimal > b {
+  top: 7px;
+}
+.illustration-layout > i,
+.illustration-layout > b,
+.illustration-layout > em,
+.illustration-layout > span {
+  height: 8px;
+  left: 15%;
+  width: 70%;
+  background: #b49bc9;
+  border-radius: 3px;
+}
+.illustration-layout > i {
+  top: 10px;
+}
+.illustration-layout > b {
+  top: 24px;
+}
+.illustration-layout > em {
+  top: 38px;
+}
+.illustration-layout > span {
+  display: none;
+}
+.illustration-layout.option-grid > i,
+.illustration-layout.option-grid > b,
+.illustration-layout.option-grid > em,
+.illustration-layout.option-grid > span {
+  width: 32%;
+}
+.illustration-layout.option-grid > b {
+  top: 10px;
+  left: 53%;
+}
+.illustration-layout.option-grid > em {
+  top: 28px;
+}
+.illustration-layout.option-grid > span {
+  top: 28px;
+  left: 53%;
+  display: block;
+}
+.illustration-layout.option-compact > i,
+.illustration-layout.option-compact > b,
+.illustration-layout.option-compact > em {
+  height: 5px;
+}
+.illustration-layout.option-compact > b {
+  top: 21px;
+}
+.illustration-layout.option-compact > em {
+  top: 32px;
+}
+.illustration-background {
+  background-color: var(--design-background);
+  border: 1px solid #e8e1ed;
+}
+.illustration-background.option-gradient {
+  background-image: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--design-accent) 35%, var(--design-background)),
+    var(--design-background)
+  );
+}
+.illustration-background.option-dots {
+  background-image: radial-gradient(
+    color-mix(in srgb, var(--design-accent) 40%, transparent) 1px,
+    transparent 1px
+  );
+  background-size: 9px 9px;
+}
+.illustration-background.option-grid {
+  background-image:
+    linear-gradient(
+      color-mix(in srgb, var(--design-accent) 15%, transparent) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--design-accent) 15%, transparent) 1px,
+      transparent 1px
+    );
+  background-size: 10px 10px;
+}
+.illustration-icons {
+  background: #f7f2fc;
+  color: #9070ac;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.illustration-icons > svg {
+  box-sizing: content-box;
+  padding: 8px;
+  background: #e9ddf6;
+  border-radius: 50%;
+}
+.illustration-icons.option-rounded > svg {
+  border-radius: 8px;
+}
+.illustration-icons.option-outline > svg {
+  border: 1px solid #b69aca;
+  background: transparent;
+}
+.illustration-icons.option-minimal > svg {
+  background: transparent;
+}
+.font-specimen {
+  padding: 15px;
+  border: 1px solid #eee4f6;
+  border-radius: 7px;
+  background: #faf6fe;
+  font-size: 20px;
+  line-height: 1.5;
+  color: #775f86;
+  overflow-wrap: anywhere;
+}
+.font-specimen > span {
+  display: block;
+  margin-top: 4px;
+  font-size: 12px;
+  color: #8a7499;
+}
+.expanded-button-styles {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.button-style-choice.elevated > span {
+  box-shadow: 0 4px 6px color-mix(in srgb, var(--choice-color) 30%, transparent);
+}
+
+/* Shared renderer: both the live phone and generated profile use these classes. */
+.profile-identity {
+  display: flow-root;
+}
+.profile-identity-copy {
+  min-width: 0;
+}
+.profile-card.header-centered .profile-identity,
+.profile-card.header-centered .profile-bio {
+  text-align: center;
+}
+.profile-card.header-centered .avatar-wrap {
+  margin-inline: auto;
+}
+.profile-card.header-centered .profile-socials {
+  justify-content: center;
+}
+.profile-card.header-split .profile-cover {
+  height: 76px;
+}
+.profile-card.header-split .profile-identity {
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr);
+  gap: 13px;
+  align-items: center;
+  padding-top: 20px;
+}
+.profile-card.header-split .avatar-wrap {
+  width: 64px;
+  height: 64px;
+  margin: 0;
+}
+.profile-card.header-split .profile-avatar,
+.profile-card.header-split .avatar-fallback {
+  width: 64px;
+  height: 64px;
+}
+.profile-card.header-split .profile-name {
+  margin-top: 0;
+  font-size: 20px;
+}
+.profile-card.header-split .profile-position {
+  margin-top: 5px;
+}
+.profile-card.header-minimal .profile-cover {
+  height: 48px;
+  background: transparent !important;
+  overflow: visible;
+}
+.profile-card.header-minimal .cover-orbit,
+.profile-card.header-minimal .cover-brand {
+  display: none;
+}
+.profile-card.header-minimal .avatar-wrap {
+  margin-top: 0;
+}
+.profile-card.header-minimal .profile-logo {
+  top: 12px;
+  max-height: 28px;
+}
+.profile-card.background-gradient {
+  background-image: linear-gradient(
+    150deg,
+    color-mix(in srgb, var(--profile-primary) 13%, var(--profile-bg)),
+    var(--profile-bg) 55%,
+    color-mix(in srgb, var(--profile-cover-end) 25%, var(--profile-bg))
+  );
+}
+.profile-card.background-dots {
+  background-image: radial-gradient(
+    color-mix(in srgb, var(--profile-primary) 18%, transparent) 0.8px,
+    transparent 0.8px
+  );
+  background-size: 15px 15px;
+}
+.profile-card.background-grid {
+  background-image:
+    linear-gradient(
+      color-mix(in srgb, var(--profile-primary) 8%, transparent) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--profile-primary) 8%, transparent) 1px,
+      transparent 1px
+    );
+  background-size: 22px 22px;
+}
+.profile-card .profile-links {
+  display: grid;
+  gap: 9px;
+  margin-top: 9px;
+}
+.profile-card .profile-links:empty {
+  display: none;
+}
+.profile-card .profile-links .profile-link {
+  margin-top: 0;
+  min-width: 0;
+}
+.profile-card.links-grid .profile-links {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.profile-card.links-grid .profile-link {
+  padding-inline: 10px;
+  font-size: 11px;
+}
+.profile-card.links-compact .profile-link {
+  text-align: left;
+  justify-content: flex-start;
+  min-height: 34px;
+  padding-block: 8px;
+}
+.profile-card.button-filled .profile-link,
+.profile-card.button-elevated .profile-button {
+  color: var(--profile-bg);
+  border: 1px solid var(--profile-primary);
+  background: var(--profile-primary);
+}
+.profile-card.button-outline .profile-link {
+  color: var(--profile-primary);
+  background: transparent;
+  border-color: var(--profile-primary);
+}
+.profile-card.button-soft .profile-link {
+  color: var(--profile-primary);
+  background: color-mix(in srgb, var(--profile-primary) 12%, var(--profile-bg));
+  border-color: transparent;
+}
+.profile-card.button-elevated .profile-button {
+  box-shadow: 0 4px 10px
+    color-mix(in srgb, var(--profile-primary) 22%, transparent);
+}
+.profile-card.icon-rounded .profile-socials > a {
+  border-radius: 8px;
+}
+.profile-card.icon-outline .profile-socials > a {
+  background: transparent;
+  border: 1px solid var(--profile-primary);
+}
+.profile-card.icon-minimal .profile-socials > a {
+  background: transparent;
+  border-color: transparent;
+  border-radius: 0;
+}
+.profile-card:is(.icon-circle, .icon-rounded, .icon-outline)
+  .profile-contact
+  > a
+  > svg:first-child {
+  padding: 4px;
+  box-sizing: content-box;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--profile-primary) 7%, var(--profile-bg));
+}
+.profile-card.icon-rounded .profile-contact > a > svg:first-child {
+  border-radius: 5px;
+}
+.profile-card.icon-outline .profile-contact > a > svg:first-child {
+  background: transparent;
+  border: 1px solid var(--profile-primary);
+}
+.public-card-wrap .profile-card.header-split .profile-identity {
+  grid-template-columns: 80px minmax(0, 1fr);
+  gap: 16px;
+  padding-top: 24px;
+}
+.public-card-wrap .profile-card.header-split .avatar-wrap,
+.public-card-wrap .profile-card.header-split .profile-avatar,
+.public-card-wrap .profile-card.header-split .avatar-fallback {
+  width: 80px;
+  height: 80px;
+}
+.public-card-wrap .profile-card.header-split .profile-name {
+  font-size: 25px;
+}
+.public-card-wrap .profile-card.links-grid .profile-link {
+  font-size: 12px;
+}
+.public-card-wrap .profile-card.links-compact .profile-link {
+  min-height: 40px;
+}
+@media (max-width: 850px) and (min-width: 701px) {
+  .palette-options {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .design-choice-grid {
+    gap: 10px;
+  }
+  .design-choice {
+    padding: 9px;
+  }
+  .design-choice > small {
+    font-size: 9px;
+  }
+}
+@media (max-width: 700px) {
+  .design-form .theme-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+  .palette-options {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .palette-option {
+    min-height: 68px;
+  }
+  .palette-option > span:last-child {
+    font-size: 11px;
+  }
+  .design-choice-grid {
+    gap: 11px;
+  }
+  .design-choice {
+    padding: 11px;
+  }
+  .design-choice > strong {
+    font-size: 12px;
+  }
+  .design-choice > small {
+    font-size: 10px;
+  }
+  .design-form .color-fields {
+    grid-template-columns: 1fr;
+  }
+  .design-form .color-field {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .design-form .color-field > span {
+    font-size: 12px;
+    margin-bottom: 0;
+  }
+  .design-form .color-field > div {
+    width: 140px;
+    flex-shrink: 0;
+  }
+  .design-form .color-field > div > span {
+    font-size: 11px;
+  }
+  .design-form .color-field input {
+    width: 34px;
+    height: 30px;
+  }
+  .design-form .button-style-choice > span {
+    font-size: 12px;
+    min-height: 44px;
+  }
+  .profile-card.links-grid .profile-link {
+    gap: 6px;
+  }
+}
+
+.design-form .button-style-choice > span {
+  display: grid;
+  place-items: center;
+  min-height: 34px;
+}
+.design-form .button-style-choice > span > i {
+  width: 42%;
+  height: 3px;
+  display: block;
+  border-radius: 3px;
+  background: currentColor;
+}
+.design-form .button-style-choice > strong {
+  display: block;
+  margin-top: 8px;
+  margin-bottom: 3px;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.7;
+  color: #776084;
+}
+.design-form .template-buttons-grid > b {
+  width: 100%;
+  box-shadow: none;
+  mask-image: linear-gradient(
+    to right,
+    black 45%,
+    transparent 45%,
+    transparent 55%,
+    black 55%
+  );
+}
+.workspace-mini-page.mini-header-centered > img,
+.workspace-mini-page.mini-header-centered > .mini-page-avatar {
+  margin-inline: auto;
+}
+.workspace-mini-page.mini-header-centered {
+  text-align: center;
+}
+.workspace-mini-page.mini-header-minimal > .mini-page-cover {
+  height: 22px;
+  background: transparent !important;
+}
+.workspace-mini-page.mini-header-minimal > img,
+.workspace-mini-page.mini-header-minimal > .mini-page-avatar {
+  margin-top: 0;
+}
+.workspace-mini-page.mini-links-grid > i {
+  mask-image: linear-gradient(
+    to right,
+    black 45%,
+    transparent 45%,
+    transparent 55%,
+    black 55%
+  );
+}
+@media (max-width: 700px) {
+  .design-form .button-style-choice > strong {
+    font-size: 12px;
+  }
+}
+
+/* Optional featured image, shared by live previews and generated pages. */
+.profile-card .profile-showcase {
+  margin: 19px 0 0;
+}
+.profile-showcase > img {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: var(--profile-radius);
+  border: 1px solid color-mix(in srgb, var(--profile-text) 10%, transparent);
+}
+.profile-showcase > figcaption {
+  font-size: 10px;
+  line-height: 1.7;
+  margin-top: 7px;
+  color: var(--profile-text);
+  opacity: 0.7;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+.public-card-wrap .profile-showcase {
+  margin-top: 23px;
+}
+.public-card-wrap .profile-showcase > figcaption {
+  font-size: 12px;
+}
+
+/* Uploaded cover photos keep their own colors in every interface mode. */
+.profile-cover-photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.profile-card.with-cover-photo .profile-logo {
+  z-index: 1;
+}
+.profile-card.header-minimal.with-cover-photo .profile-cover {
+  height: 116px;
+  overflow: hidden;
+}
+.profile-card.header-minimal.with-cover-photo .profile-identity {
+  padding-top: 18px;
+}
+.public-card-wrap .profile-card.header-minimal.with-cover-photo .profile-cover {
+  height: 145px;
+}
+.mini-page-cover {
+  position: relative;
+  overflow: hidden;
+}
+.mini-cover-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.workspace-mini-page.mini-header-minimal > .mini-page-cover.has-cover-photo {
+  height: 46px;
+}

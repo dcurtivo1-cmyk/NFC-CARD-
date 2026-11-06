@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/((?!assets/|favicon.svg|alex-portrait.svg).*)",
+      "destination": "/index.html"
+    }
+  ]
+}
