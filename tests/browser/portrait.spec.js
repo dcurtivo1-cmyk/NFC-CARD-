@@ -1,5 +1,109 @@
 import { test, expect } from "@playwright/test";
 
+test("circle and portrait choices preserve the image and persist to the same public link", async ({
+  page,
+  browser,
+}) => {
+  test.setTimeout(90_000);
+  await page.goto("/editor?type=card&sample=1");
+  const original = await page
+    .locator(".preview-panel .profile-portrait")
+    .getAttribute("src");
+  await page
+    .getByRole("button", { name: "Make it yours", exact: true })
+    .last()
+    .click();
+  const styles = page.getByRole("group", {
+    name: "Profile photo style",
+    exact: true,
+  });
+  const circle = styles.getByRole("button", { name: /^Circle/ });
+  const portrait = styles.getByRole("button", { name: /^Portrait/ });
+  await page.getByLabel("Portrait size", { exact: true }).fill("115");
+  await circle.click();
+  await expect(page.locator(".preview-panel .profile-avatar")).toHaveAttribute(
+    "src",
+    original,
+  );
+  await expect(page.locator(".preview-panel .profile-avatar")).toHaveCSS(
+    "border-radius",
+    "50%",
+  );
+  await expect(page.locator(".preview-panel .profile-portrait")).toHaveCount(0);
+  await expect(page.getByLabel("Portrait size", { exact: true })).toHaveCount(
+    0,
+  );
+  await page.getByRole("button", { name: "Premium Dark", exact: true }).click();
+  await expect(circle).toHaveAttribute("aria-pressed", "true");
+  await portrait.click();
+  await expect(page.getByLabel("Portrait size", { exact: true })).toHaveValue(
+    "115",
+  );
+  await expect(
+    page.locator(".preview-panel .profile-portrait"),
+  ).toHaveAttribute("src", original);
+  await circle.click();
+  await page.getByRole("button", { name: "Save draft", exact: true }).click();
+  const saved = await page.evaluate(
+    () => JSON.parse(localStorage.getItem("folio-studio-documents-v1"))[0],
+  );
+  expect(saved.design.photoStyle).toBe("circle");
+  expect(saved.details.profilePhoto).toBe(original);
+  await page.goto("/dashboard");
+  await expect(page.locator(".workspace-mini-page > img")).toBeVisible();
+  await expect(page.locator(".mini-portrait")).toHaveCount(0);
+  await page.goto(`/editor/${saved.id}`);
+  await page
+    .getByRole("button", { name: "Make it yours", exact: true })
+    .last()
+    .click();
+  await expect(circle).toHaveAttribute("aria-pressed", "true");
+  await page.getByRole("button", { name: "Final look", exact: false }).click();
+  await page
+    .getByRole("button", { name: "Generate my demo", exact: true })
+    .click();
+  const url = await page.getByLabel("Your actual profile URL").inputValue();
+  const visitor = await browser.newContext({
+    viewport: { width: 390, height: 844 },
+  });
+  try {
+    const other = await visitor.newPage();
+    await other.goto(url);
+    await expect(other.locator(".profile-avatar")).toHaveAttribute(
+      "src",
+      original,
+    );
+    await expect(other.locator(".profile-avatar")).toHaveCSS(
+      "border-radius",
+      "50%",
+    );
+    await other.screenshot({
+      path: "test-results/photo-style-circle.png",
+      fullPage: true,
+    });
+    await page.goto(`/editor/${saved.id}`);
+    await page
+      .getByRole("button", { name: "Make it yours", exact: true })
+      .last()
+      .click();
+    await portrait.click();
+    await page
+      .getByRole("button", { name: "Save changes", exact: true })
+      .click();
+    const remote = await page.request.get(`/api/pages/${saved.id}`);
+    expect((await remote.json()).document.design.photoStyle).toBe("portrait");
+    await other.reload();
+    await expect(other.locator(".profile-portrait")).toHaveAttribute(
+      "src",
+      original,
+    );
+    await expect(other.locator(".profile-avatar")).toHaveCount(0);
+    expect(other.url()).toBe(url);
+  } finally {
+    await visitor.close();
+  }
+});
+
 test("portraits preserve alpha and proportions, layer over the cover, and persist placement", async ({
   page,
   browser,

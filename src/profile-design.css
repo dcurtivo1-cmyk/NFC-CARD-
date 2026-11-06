@@ -728,6 +728,33 @@
 }
 
 /* Business card portraits remain whole, unframed layers above the banner. */
+.photo-style-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+.photo-style-sample {
+  display: grid;
+  place-items: center;
+  height: 80px;
+  margin: 0 auto 12px;
+}
+.photo-style-sample img {
+  width: 80px;
+  height: 80px;
+}
+.photo-style-circle img {
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center top;
+}
+.photo-style-portrait img {
+  border-radius: 0;
+  object-fit: contain;
+}
+.profile-card.photo-circle .profile-avatar {
+  object-position: center top;
+}
 .profile-card.portrait-card .profile-cover {
   position: relative;
   isolation: isolate;

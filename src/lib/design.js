@@ -9,6 +9,7 @@ import {
   fontOptions,
   headerLayouts,
   iconStyles,
+  photoStyles,
 } from "../data/design.js";
 
 // Old drafts retain their original layout. Validate every saved value before CSS.
@@ -25,6 +26,7 @@ export function normalizeDesign(value = {}) {
     iconStyle: iconStyles,
     font: fontOptions,
     buttonStyle: buttonStyles,
+    photoStyle: photoStyles,
   };
   for (const [key, values] of Object.entries(options)) {
     if (values.some((option) => option.id === value?.[key]))

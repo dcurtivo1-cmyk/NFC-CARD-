@@ -265,6 +265,8 @@ export default function Dashboard() {
         <div className="workspace-grid">
           {filtered.map((doc) => {
             const product = products.find((p) => p.id === doc.type);
+            const portraitMode =
+              doc.type === "card" && doc.design.photoStyle !== "circle";
             return (
               <article className="workspace-card" key={doc.id}>
                 <Link
@@ -278,10 +280,9 @@ export default function Dashboard() {
                   aria-label={`Open ${doc.details.displayName || doc.details.fullName || "Untitled page"}`}
                 >
                   <div
-                    className={`workspace-mini-page ${doc.type === "card" ? "mini-portrait-card" : ""} mini-header-${doc.design.headerLayout} mini-links-${doc.design.buttonLayout}`}
+                    className={`workspace-mini-page ${portraitMode ? "mini-portrait-card" : ""} mini-header-${doc.design.headerLayout} mini-links-${doc.design.buttonLayout}`}
                     style={{
-                      background:
-                        doc.type === "card" ? "#fff" : doc.design.background,
+                      background: portraitMode ? "#fff" : doc.design.background,
                       "--portrait-size": `${doc.design.portraitSize ?? 100}%`,
                       "--portrait-x": `${doc.design.portraitX ?? 0}%`,
                       "--portrait-y": `${doc.design.portraitY ?? 0}%`,
@@ -298,7 +299,7 @@ export default function Dashboard() {
                           alt=""
                         />
                       )}
-                      {doc.type === "card" && doc.details.profilePhoto && (
+                      {portraitMode && doc.details.profilePhoto && (
                         <img
                           className="mini-portrait"
                           src={doc.details.profilePhoto}
@@ -306,7 +307,7 @@ export default function Dashboard() {
                         />
                       )}
                     </div>
-                    {doc.type !== "card" &&
+                    {!portraitMode &&
                       (doc.details.profilePhoto ? (
                         <img src={doc.details.profilePhoto} alt="" />
                       ) : (

@@ -340,7 +340,7 @@ export default function Editor() {
           {step === 1 && (
             <DesignForm
               design={document.design}
-              portraitMode={document.type === "card"}
+              businessCard={document.type === "card"}
               portraitSrc={document.details.profilePhoto}
               hasCoverPhoto={Boolean(document.details.coverPhoto)}
               onChange={(design) => {

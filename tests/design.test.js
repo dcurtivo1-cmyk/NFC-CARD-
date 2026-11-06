@@ -11,6 +11,7 @@ import {
   fontOptions,
   headerLayouts,
   iconStyles,
+  photoStyles,
 } from "../src/data/design.js";
 import { createDocument, themes } from "../src/data/presets.js";
 import { normalizeDesign } from "../src/lib/design.js";
@@ -24,6 +25,7 @@ test("all design options survive the storage normalization boundary", () => {
     iconStyle: iconStyles,
     font: fontOptions,
     buttonStyle: buttonStyles,
+    photoStyle: photoStyles,
   };
   const portrait = createDocument("card", true);
   Object.assign(portrait.design, {

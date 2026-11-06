@@ -3,10 +3,24 @@ export const designDefaults = {
   buttonLayout: "stacked",
   backgroundStyle: "solid",
   iconStyle: "circle",
+  photoStyle: "portrait",
   portraitSize: 100,
   portraitX: 0,
   portraitY: 0,
 };
+
+export const photoStyles = [
+  {
+    id: "circle",
+    name: "Circle",
+    description: "A round profile photo below the cover.",
+  },
+  {
+    id: "portrait",
+    name: "Portrait (no frame)",
+    description: "A large, unframed portrait in front of the banner.",
+  },
+];
 
 export const headerLayouts = [
   {

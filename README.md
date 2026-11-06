@@ -100,7 +100,9 @@ tests/
 
 ## Business card portrait banner
 
-Calling Cards display the uploaded portrait as an unframed, absolutely positioned layer above the cover. A white gradient blends the hero into the white information section, with readable text even when selecting a dark template. Names and contact details remain below the banner.
+Choose **Make it yours > Profile photo style > Circle** for a round profile photo, or **Portrait (no frame)** for the large banner portrait. The choice persists through drafts, template changes, publishing and offline copies. Switching styles changes the display only and preserves the complete uploaded image and portrait placement settings. Existing cards keep the portrait style until you change it.
+
+In portrait mode, Calling Cards display the uploaded portrait as an unframed, absolutely positioned layer above the cover. A white gradient blends the hero into the white information section, with readable text even when selecting a dark template. Names and contact details remain below the banner.
 
 Upload a transparent PNG or WebP in **Your details > Your brand, at a glance > Profile photo**. The image preview preserves its aspect ratio and alpha channel. Background removal is not included: images with backgrounds retain those backgrounds, and older square-cropped images need to be replaced with their full portrait originals.
 

@@ -59,7 +59,7 @@ export default function ProfileCard({
   publicView = false,
 }) {
   const { details: d, design, type } = document;
-  const portraitMode = type === "card";
+  const portraitMode = type === "card" && design.photoStyle !== "circle";
   const { headerLayout, buttonLayout, backgroundStyle, iconStyle } = {
     ...designDefaults,
     ...design,
@@ -100,7 +100,7 @@ export default function ProfileCard({
         </div>
       )}
       <article
-        className={`profile-card ${portraitMode ? "portrait-card" : ""} ${phone ? "in-phone" : ""} button-${design.buttonStyle} header-${headerLayout} links-${buttonLayout} background-${backgroundStyle} icon-${iconStyle} ${d.coverPhoto ? "with-cover-photo" : ""}`}
+        className={`profile-card ${portraitMode ? "portrait-card" : type === "card" ? "photo-circle" : ""} ${phone ? "in-phone" : ""} button-${design.buttonStyle} header-${headerLayout} links-${buttonLayout} background-${backgroundStyle} icon-${iconStyle} ${d.coverPhoto ? "with-cover-photo" : ""}`}
         style={{
           "--profile-primary": design.primary,
           "--profile-bg": portraitMode ? "#ffffff" : design.background,

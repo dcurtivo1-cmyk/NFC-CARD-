@@ -11,6 +11,7 @@ import {
   Shapes,
   Instagram,
   Move,
+  UserRound,
 } from "lucide-react";
 import { themes } from "../data/presets";
 import {
@@ -24,6 +25,7 @@ import {
   fontOptions,
   headerLayouts,
   iconStyles,
+  photoStyles,
 } from "../data/design";
 import { FormSection } from "./DetailsForm";
 
@@ -73,9 +75,10 @@ export default function DesignForm({
   design,
   onChange,
   hasCoverPhoto = false,
-  portraitMode = false,
+  businessCard = false,
   portraitSrc = "",
 }) {
+  const portraitMode = businessCard && design.photoStyle !== "circle";
   const update = (patch) => {
     const next = { ...design, ...patch };
     if ("coverStart" in patch || "coverEnd" in patch)
@@ -90,6 +93,41 @@ export default function DesignForm({
         "--design-background": design.background,
       }}
     >
+      {businessCard && (
+        <FormSection
+          title="Profile photo style"
+          description="Choose a round photo or an unframed portrait. You can switch anytime without replacing the image."
+          icon={UserRound}
+        >
+          <fieldset className="design-choices">
+            <legend className="sr-only">Profile photo style</legend>
+            <div className="photo-style-options">
+              {photoStyles.map((option) => (
+                <button
+                  type="button"
+                  key={option.id}
+                  className={`design-choice ${(design.photoStyle ?? "portrait") === option.id ? "selected" : ""}`}
+                  aria-pressed={(design.photoStyle ?? "portrait") === option.id}
+                  onClick={() => update({ photoStyle: option.id })}
+                >
+                  <span
+                    className={`photo-style-sample photo-style-${option.id}`}
+                    aria-hidden="true"
+                  >
+                    {portraitSrc ? (
+                      <img src={portraitSrc} alt="" />
+                    ) : (
+                      <UserRound size={32} />
+                    )}
+                  </span>
+                  <strong>{option.name}</strong>
+                  <small>{option.description}</small>
+                </button>
+              ))}
+            </div>
+          </fieldset>
+        </FormSection>
+      )}
       <FormSection
         title="Choose your template"
         description="Start with a complete look, then customize every detail."
@@ -106,6 +144,7 @@ export default function DesignForm({
                 onClick={() =>
                   onChange({
                     ...theme,
+                    photoStyle: design.photoStyle ?? "portrait",
                     portraitSize: design.portraitSize,
                     portraitX: design.portraitX,
                     portraitY: design.portraitY,
