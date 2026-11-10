@@ -24,6 +24,8 @@ Drafts and recovery copies stay local. **Save changes** on an already published 
 - Build: `npm run build` builds React and bundles the Worker with embedded assets into `dist/server/index.js`. Sites packaging includes the hosting manifest and schema migrations. No credentials, private editing keys or local database files belong in source or deployment archives.
 - Static hosting: the included Netlify and Vercel proxy rules route `/api/pages/:id` to the public Sites service before the SPA fallback. Publication failures remain visible; the app never substitutes a local-only URL for a confirmed public link.
 
+Design changes must ship to both the frontend and the Sites publishing Worker. The Worker validates saved designs using `src/lib/design.js`; an older Worker can discard a new template even when the editor already supports it. Deploy the updated Worker before releasing a frontend that sends new design fields. After an update, regenerate affected pages from their saved editor drafts to restore design fields discarded by an older server.
+
 Public snapshots include resized raster images as data URLs and are limited to 1.5 MB per request. This keeps rows below D1's row-size limit. Oversized payloads return 413 with guidance to use smaller photos. For larger media collections, migrate images to object storage and keep only their public URLs in the snapshot.
 
 ## NFC workflow

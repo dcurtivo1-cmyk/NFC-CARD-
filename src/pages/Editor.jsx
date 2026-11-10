@@ -453,7 +453,7 @@ export default function Editor() {
             </span>
           </div>
           <div className="preview-stage">
-            <ProfileCard document={document} phone />
+            <ProfileCard document={document} phone publicView />
           </div>
           <div className="preview-caption">
             <span className="preview-dot" />

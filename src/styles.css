@@ -2993,59 +2993,6 @@ select.input {
   border: 1px solid #e8dcef;
   box-shadow: 0 15px 40px #78538510;
 }
-.public-card-wrap .profile-cover {
-  height: 145px;
-}
-.public-card-wrap .profile-content {
-  padding: 0 29px 24px;
-}
-.public-card-wrap .avatar-wrap,
-.public-card-wrap .profile-avatar,
-.public-card-wrap .avatar-fallback {
-  width: 87px;
-  height: 87px;
-}
-.public-card-wrap .avatar-wrap {
-  margin-top: -43px;
-}
-.public-card-wrap .profile-name {
-  font-size: 28px;
-}
-.public-card-wrap .profile-position {
-  font-size: 11px;
-}
-.public-card-wrap .profile-bio {
-  font-size: 12px;
-  margin-top: 15px;
-}
-.public-card-wrap .profile-socials {
-  margin-top: 19px;
-}
-.public-card-wrap .profile-socials > a {
-  width: 36px;
-  height: 36px;
-}
-.public-card-wrap .profile-button {
-  min-height: 45px;
-  font-size: 12px;
-}
-.public-card-wrap .profile-contact > a {
-  font-size: 10px;
-  min-height: 38px;
-}
-.public-card-wrap .profile-powered {
-  margin-top: 26px;
-  font-size: 8px;
-}
-.public-card-wrap .profile-menu-item strong {
-  font-size: 13px;
-}
-.public-card-wrap .profile-menu-item b {
-  font-size: 12px;
-}
-.public-card-wrap .profile-menu-item p {
-  font-size: 11px;
-}
 .public-demo-notice {
   max-width: 620px;
   margin: 30px auto 0;
@@ -3880,12 +3827,6 @@ select.input {
     width: 274px;
     border-width: 6px;
     border-radius: 34px;
-  }
-  .preview-stage .profile-content {
-    padding-inline: 19px;
-  }
-  .preview-stage .profile-name {
-    font-size: 21px;
   }
   .preview-stage .profile-card.in-phone {
     max-height: 530px;
@@ -4865,12 +4806,6 @@ select.input {
     max-height: 620px;
     min-height: 510px;
   }
-  .preview-stage .profile-content {
-    padding-inline: 23px;
-  }
-  .preview-stage .profile-name {
-    font-size: 23px;
-  }
   .preview-caption {
     font-size: 10px;
     margin-top: 20px;
@@ -5470,9 +5405,6 @@ select.input {
     font-size: 8px;
     padding-inline: 8px;
   }
-  .public-card-wrap .profile-content {
-    padding-inline: 24px;
-  }
   .modal {
     padding: 20px;
   }
@@ -5575,24 +5507,6 @@ select.input {
   }
 }
 
-/* The generated profile is a reading surface, beyond the miniature editor preview. */
-.public-card-wrap .profile-bio {
-  font-size: 14px;
-}
-.public-card-wrap .profile-position {
-  font-size: 12px;
-}
-.public-card-wrap .profile-button {
-  font-size: 14px;
-  min-height: 48px;
-}
-.public-card-wrap .profile-contact > a {
-  font-size: 12px;
-  min-height: 42px;
-}
-.public-card-wrap .profile-menu-item p {
-  font-size: 12px;
-}
 @media (max-width: 700px) {
   .workspace-filters .search-field > input {
     font-size: 16px;

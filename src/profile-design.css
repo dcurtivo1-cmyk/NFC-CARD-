@@ -351,6 +351,23 @@
 }
 
 /* Shared renderer: both the live phone and generated profile use these classes. */
+.profile-card .profile-bio {
+  font-size: 14px;
+}
+.profile-card .profile-position {
+  font-size: 12px;
+}
+.profile-card .profile-button {
+  font-size: 14px;
+  min-height: 48px;
+}
+.profile-card .profile-contact > a {
+  font-size: 12px;
+  min-height: 42px;
+}
+.profile-card .profile-menu-item p {
+  font-size: 12px;
+}
 .profile-identity {
   display: flow-root;
 }
@@ -511,26 +528,6 @@
   background: transparent;
   border: 1px solid var(--profile-primary);
 }
-.public-card-wrap .profile-card.header-split .profile-identity {
-  grid-template-columns: 80px minmax(0, 1fr);
-  gap: 16px;
-  padding-top: 24px;
-}
-.public-card-wrap .profile-card.header-split .avatar-wrap,
-.public-card-wrap .profile-card.header-split .profile-avatar,
-.public-card-wrap .profile-card.header-split .avatar-fallback {
-  width: 80px;
-  height: 80px;
-}
-.public-card-wrap .profile-card.header-split .profile-name {
-  font-size: 25px;
-}
-.public-card-wrap .profile-card.links-grid .profile-link {
-  font-size: 12px;
-}
-.public-card-wrap .profile-card.links-compact .profile-link {
-  min-height: 40px;
-}
 @media (max-width: 850px) and (min-width: 701px) {
   .palette-options {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -686,12 +683,6 @@
   overflow-wrap: anywhere;
   white-space: pre-wrap;
 }
-.public-card-wrap .profile-showcase {
-  margin-top: 23px;
-}
-.public-card-wrap .profile-showcase > figcaption {
-  font-size: 12px;
-}
 
 /* Uploaded cover photos keep their own colors in every interface mode. */
 .profile-cover-photo {
@@ -710,9 +701,6 @@
 }
 .profile-card.header-minimal.with-cover-photo .profile-identity {
   padding-top: 18px;
-}
-.public-card-wrap .profile-card.header-minimal.with-cover-photo .profile-cover {
-  height: 145px;
 }
 .mini-page-cover {
   position: relative;

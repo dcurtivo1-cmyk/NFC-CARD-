@@ -5,11 +5,34 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { openLocalDatabase } from "../server/local-db.js";
 import { handlePagesApi, MAX_PAGE_BYTES } from "../server/pages-api.js";
-import { createDocument } from "../src/data/presets.js";
+import { createDocument, themes } from "../src/data/presets.js";
 
 const id = "fl-12345678-1234-4234-8234-123456789abc";
 const token = "a".repeat(64);
 const url = `https://folio.example/api/pages/${id}`;
+
+test("publishing preserves every template and custom portrait placement", async () => {
+  const db = openLocalDatabase(":memory:");
+  try {
+    for (const theme of themes) {
+      const document = createDocument("card", true);
+      document.design = {
+        ...theme,
+        portraitSize: 87,
+        portraitX: 9,
+        portraitY: 4,
+      };
+      const response = await handlePagesApi(request("PUT", document), db);
+      assert.equal(response.status, 200);
+      const published = (await (await handlePagesApi(request(), db)).json())
+        .document;
+      assert.deepEqual(published.design, document.design, theme.name);
+      assert.deepEqual(published.details, document.details, theme.name);
+    }
+  } finally {
+    db.close();
+  }
+});
 function request(method = "GET", document, key = token, extra = {}) {
   return new Request(url, {
     method,
