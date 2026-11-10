@@ -1,0 +1,655 @@
+/* Composition is independent of palette and shared by thumbnails and profiles. */
+.profile-card[class*="composition-"] {
+  --template-line: color-mix(in srgb, var(--profile-text) 24%, transparent);
+  --template-tint: color-mix(
+    in srgb,
+    var(--profile-primary) 9%,
+    var(--profile-bg)
+  );
+}
+.profile-card .profile-identity-copy,
+.profile-card .profile-contact a {
+  min-width: 0;
+}
+.profile-card .profile-socials {
+  flex-wrap: wrap;
+}
+
+/* 01 — a business card with a strong left rail. */
+.profile-card.composition-modern {
+  border-left: 7px solid var(--profile-primary);
+}
+.profile-card.composition-modern .profile-cover {
+  aspect-ratio: 16 / 9;
+}
+.profile-card.composition-modern .profile-contact {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 7px;
+}
+.profile-card.composition-modern .profile-contact > a {
+  padding: 10px;
+  background: var(--template-tint);
+  flex-wrap: wrap;
+  align-content: start;
+  border-radius: 6px;
+}
+.profile-card.composition-modern .profile-contact > a > span {
+  flex-basis: 100%;
+}
+.profile-card.composition-modern .profile-contact > a > svg:last-child {
+  display: none;
+}
+
+/* 02 — a floating panel under a spotlight portrait. */
+.profile-card.composition-dark .profile-cover {
+  aspect-ratio: 1.35;
+}
+.profile-card.composition-dark .profile-content {
+  position: relative;
+  margin: -22px 13px 16px;
+  padding: 20px 18px;
+  border: 1px solid var(--template-line);
+  border-radius: 22px;
+  background: var(--profile-bg);
+  box-shadow: 0 12px 30px #0002;
+}
+.profile-card.composition-dark .profile-name {
+  letter-spacing: -1px;
+}
+.profile-card.composition-dark .profile-cover .cover-orbit {
+  border-width: 1px;
+}
+
+/* 03 — compact portrait and generous whitespace. */
+.profile-card.composition-minimal .profile-cover {
+  aspect-ratio: 1;
+  width: 94px;
+  margin: 28px 24px 14px;
+  border-radius: 50%;
+}
+.profile-card.composition-minimal .portrait-fade {
+  display: none;
+}
+.profile-card.composition-minimal .profile-name {
+  letter-spacing: -1px;
+}
+.profile-card.composition-minimal .profile-link {
+  border-width: 0 0 1px;
+  padding-inline: 0;
+}
+
+/* 04 — Gradient intentionally keeps the full-bleed, fading portrait composition. */
+
+/* 05 — arched portrait inside a fine double frame. */
+.profile-card.composition-elegant {
+  border: 7px double var(--template-line);
+  padding: 14px;
+}
+.profile-card.composition-elegant .profile-cover {
+  width: 76%;
+  margin: 8px auto 0;
+  aspect-ratio: 4 / 5;
+  border-radius: 150px 150px 0 0;
+}
+.profile-card.composition-elegant .profile-content {
+  padding-inline: 9px;
+}
+.profile-card.composition-elegant .profile-name {
+  font-weight: 400;
+}
+.profile-card.composition-elegant .profile-socials {
+  padding-block: 12px;
+  border-block: 1px solid var(--template-line);
+}
+
+/* 06 — a magazine masthead, oversized title, and ruled sections. */
+.profile-card.composition-editorial .profile-cover {
+  aspect-ratio: 16 / 7;
+}
+.profile-card.composition-editorial .profile-content {
+  padding-top: 14px;
+}
+.profile-card.composition-editorial .profile-name {
+  font-size: 36px;
+  line-height: 1.05;
+  letter-spacing: -1.7px;
+  font-weight: 400;
+}
+.profile-card.composition-editorial .profile-identity {
+  padding-bottom: 16px;
+  border-bottom: 3px solid var(--profile-text);
+}
+.profile-card.composition-editorial .profile-position {
+  text-transform: uppercase;
+  letter-spacing: 1.4px;
+  font-size: 10px;
+}
+.profile-card.composition-editorial .profile-bio {
+  border-bottom: 1px solid var(--template-line);
+  padding-bottom: 16px;
+}
+
+/* 07 — inset photograph and modular tiles. */
+.profile-card.composition-bento {
+  padding: 12px;
+}
+.profile-card.composition-bento .profile-cover {
+  border-radius: 22px;
+  aspect-ratio: 4 / 3;
+}
+.profile-card.composition-bento .profile-content {
+  padding: 0;
+}
+.profile-card.composition-bento .profile-identity {
+  background: var(--template-tint);
+  padding: 18px;
+  margin-top: 10px;
+  border-radius: 18px;
+}
+.profile-card.composition-bento .profile-bio {
+  padding: 16px;
+  border: 1px solid var(--template-line);
+  border-radius: 18px;
+}
+.profile-card.composition-bento .profile-contact {
+  padding: 12px;
+  border: 1px solid var(--template-line);
+  border-radius: 18px;
+}
+.profile-card.composition-bento .profile-link {
+  min-height: 66px;
+}
+
+/* 08 — heavy rules and hard offset shadows. */
+.profile-card.composition-brutalist {
+  border: 3px solid var(--profile-text);
+}
+.profile-card.composition-brutalist .profile-cover {
+  aspect-ratio: 16 / 10;
+  border-bottom: 3px solid var(--profile-text);
+}
+.profile-card.composition-brutalist .portrait-fade {
+  display: none;
+}
+.profile-card.composition-brutalist .profile-name {
+  font-size: 32px;
+  font-weight: 900;
+  text-transform: uppercase;
+  line-height: 1.05;
+}
+.profile-card.composition-brutalist .profile-button {
+  border: 2px solid var(--profile-text);
+  box-shadow: 4px 4px 0 var(--profile-text);
+  margin-bottom: 6px;
+}
+.profile-card.composition-brutalist .profile-socials > a {
+  border: 2px solid var(--profile-text);
+}
+
+/* 09 — an organic leaf-shaped portrait and curved dividers. */
+.profile-card.composition-botanical .profile-cover {
+  width: 80%;
+  margin: 22px auto 0;
+  aspect-ratio: 1;
+  border-radius: 48% 4% 48% 4%;
+}
+.profile-card.composition-botanical .portrait-fade {
+  display: none;
+}
+.profile-card.composition-botanical .profile-bio {
+  padding: 16px 8px;
+  border-block: 1px solid var(--template-line);
+  border-radius: 30%;
+}
+.profile-card.composition-botanical .profile-name {
+  font-weight: 400;
+  font-size: 29px;
+}
+.profile-card.composition-botanical .profile-contact {
+  border-top: 0;
+}
+
+/* 10 — console window, squared portrait, and command rows. */
+.profile-card.composition-terminal {
+  border: 1px solid var(--profile-primary);
+  padding-top: 20px;
+  position: relative;
+}
+.profile-card.composition-terminal::before {
+  content: "●  ●  ●";
+  display: block;
+  padding: 0 18px 12px;
+  font-size: 10px;
+  color: var(--profile-primary);
+  border-bottom: 1px solid var(--template-line);
+}
+.profile-card.composition-terminal .profile-cover {
+  width: 100px;
+  margin: 20px 23px 0;
+  aspect-ratio: 1;
+  border: 1px solid var(--profile-primary);
+}
+.profile-card.composition-terminal .portrait-fade {
+  display: none;
+}
+.profile-card.composition-terminal .profile-name {
+  font-size: 23px;
+}
+.profile-card.composition-terminal .profile-name::before {
+  content: "> ";
+  color: var(--profile-primary);
+}
+.profile-card.composition-terminal .profile-link {
+  border-width: 0 0 1px;
+  border-style: dashed;
+}
+.profile-card.composition-terminal .profile-contact {
+  border-top-style: dashed;
+}
+
+/* 11 — perforated ticket with scalloped edges. */
+.profile-card.composition-ticket {
+  padding: 12px;
+}
+.profile-card.composition-ticket .profile-cover {
+  aspect-ratio: 16 / 9;
+  border-radius: 60px 0 60px 0;
+}
+.profile-card.composition-ticket .profile-content {
+  border: 1px dashed var(--template-line);
+  padding: 18px;
+  margin-top: 12px;
+}
+.profile-card.composition-ticket .profile-identity {
+  padding-bottom: 15px;
+  border-bottom: 2px dashed var(--profile-primary);
+}
+.profile-card.composition-ticket .profile-position {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+.profile-card.composition-ticket .profile-contact {
+  border-top: 2px dashed var(--template-line);
+}
+
+/* 12 — lanyard slot and a compact employee badge. */
+.profile-card.composition-badge {
+  padding-top: 16px;
+  border-top: 9px solid var(--profile-primary);
+}
+.profile-card.composition-badge::before {
+  content: "";
+  display: block;
+  width: 55px;
+  height: 8px;
+  border-radius: 8px;
+  background: var(--template-line);
+  margin: 0 auto 20px;
+}
+.profile-card.composition-badge .profile-cover {
+  width: 52%;
+  margin: auto;
+  aspect-ratio: 4 / 5;
+  border-radius: 8px;
+}
+.profile-card.composition-badge .portrait-fade {
+  display: none;
+}
+.profile-card.composition-badge .profile-position {
+  text-transform: uppercase;
+  letter-spacing: 1.1px;
+  font-size: 10px;
+}
+.profile-card.composition-badge .profile-identity {
+  border-bottom: 3px solid var(--profile-primary);
+  padding-bottom: 15px;
+}
+.profile-card.composition-badge .profile-bio {
+  text-align: center;
+}
+
+/* 13 — photo print above a postcard message. */
+.profile-card.composition-postcard {
+  padding: 18px 12px 0;
+}
+.profile-card.composition-postcard .profile-cover {
+  aspect-ratio: 4 / 3;
+  border: 8px solid var(--profile-bg);
+  outline: 1px solid var(--template-line);
+  transform: rotate(-2deg);
+  margin: 4px 5px 20px;
+  box-shadow: 0 5px 10px #0001;
+}
+.profile-card.composition-postcard .profile-content {
+  padding: 4px 14px 18px;
+}
+.profile-card.composition-postcard .profile-name {
+  font-style: italic;
+  font-size: 30px;
+  font-weight: 400;
+}
+.profile-card.composition-postcard .profile-contact {
+  border-top: 3px double var(--template-line);
+}
+.profile-card.composition-postcard .profile-bio {
+  border-left: 2px solid var(--template-line);
+  padding-left: 14px;
+}
+
+/* 14 — drafting grid with corner marks and measured panels. */
+.profile-card.composition-blueprint {
+  border: 1px solid var(--profile-primary);
+  padding: 16px;
+}
+.profile-card.composition-blueprint .profile-cover {
+  aspect-ratio: 16 / 10;
+  outline: 1px solid var(--profile-primary);
+  outline-offset: 5px;
+  margin: 6px;
+}
+.profile-card.composition-blueprint .profile-content {
+  padding: 15px 3px;
+}
+.profile-card.composition-blueprint .profile-identity {
+  padding: 12px;
+  border-left: 3px solid var(--profile-primary);
+  border-bottom: 1px solid var(--profile-primary);
+}
+.profile-card.composition-blueprint .profile-name {
+  font-size: 23px;
+  text-transform: uppercase;
+}
+.profile-card.composition-blueprint .profile-contact > a {
+  border-bottom: 1px dashed var(--template-line);
+}
+
+/* 15 — a slanted banner and a colored identity ribbon. */
+.profile-card.composition-ribbon .profile-cover {
+  aspect-ratio: 4 / 3;
+  clip-path: polygon(0 0, 100% 0, 100% 84%, 0 100%);
+}
+.profile-card.composition-ribbon .portrait-fade {
+  display: none;
+}
+.profile-card.composition-ribbon .profile-identity {
+  margin: 12px -23px 0;
+  padding: 10px 23px 18px;
+  background: var(--template-tint);
+  border-right: 12px solid var(--profile-primary);
+}
+.profile-card.composition-ribbon .profile-link {
+  border-left: 6px solid var(--profile-text);
+}
+
+/* 16 — formal, restrained portrait with a vertical signature rule. */
+.profile-card.composition-executive .profile-cover {
+  aspect-ratio: 1;
+  width: 62%;
+  margin: 25px 0 16px 23px;
+  border-right: 6px solid var(--profile-primary);
+}
+.profile-card.composition-executive .portrait-fade {
+  display: none;
+}
+.profile-card.composition-executive .profile-identity {
+  padding-left: 16px;
+  border-left: 2px solid var(--profile-primary);
+}
+.profile-card.composition-executive .profile-name {
+  font-weight: 400;
+  font-size: 30px;
+}
+.profile-card.composition-executive .profile-socials {
+  justify-content: flex-end;
+}
+.profile-card.composition-executive .profile-contact {
+  border-top: 3px double var(--template-line);
+}
+
+/* 17 — photographic gallery with a wide mat and a small caption. */
+.profile-card.composition-gallery {
+  padding: 20px;
+}
+.profile-card.composition-gallery .profile-cover {
+  aspect-ratio: 3 / 4;
+  border: 10px solid var(--profile-bg);
+  outline: 1px solid var(--template-line);
+}
+.profile-card.composition-gallery .portrait-fade {
+  display: none;
+}
+.profile-card.composition-gallery .profile-content {
+  padding-inline: 0;
+}
+.profile-card.composition-gallery .profile-name {
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  font-size: 20px;
+  margin-top: 22px;
+}
+.profile-card.composition-gallery .profile-position {
+  font-size: 10px;
+}
+.profile-card.composition-gallery .profile-socials {
+  margin-block: 24px;
+}
+
+/* 18 — round portrait stage with concentric orbits. */
+.profile-card.composition-orbit .profile-cover {
+  width: 74%;
+  margin: 24px auto 12px;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 1px solid var(--profile-primary);
+  outline: 1px solid var(--template-line);
+  outline-offset: 8px;
+}
+.profile-card.composition-orbit .portrait-fade {
+  display: none;
+}
+.profile-card.composition-orbit .profile-bio {
+  padding: 14px;
+  border-radius: 24px;
+  background: var(--template-tint);
+}
+.profile-card.composition-orbit .profile-contact {
+  border: 1px solid var(--template-line);
+  border-radius: 24px;
+  padding: 12px 16px;
+}
+.profile-card.composition-orbit .profile-name {
+  font-size: 30px;
+}
+
+/* 19 — ruled notebook paper with a binding margin. */
+.profile-card.composition-notebook {
+  padding-left: 26px;
+  position: relative;
+  background-image: repeating-linear-gradient(
+    transparent 0 27px,
+    var(--template-line) 27px 28px
+  );
+}
+.profile-card.composition-notebook::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 10px;
+  width: 7px;
+  border-right: 1px solid var(--profile-primary);
+  background: radial-gradient(
+      circle,
+      var(--profile-primary) 2px,
+      transparent 3px
+    )
+    0 10px / 7px 28px;
+}
+.profile-card.composition-notebook .profile-cover {
+  width: 110px;
+  margin: 25px 20px 14px;
+  aspect-ratio: 1;
+  transform: rotate(3deg);
+  border: 5px solid var(--profile-bg);
+  box-shadow: 0 2px 5px #0002;
+}
+.profile-card.composition-notebook .portrait-fade {
+  display: none;
+}
+.profile-card.composition-notebook .profile-content {
+  padding-inline: 16px;
+}
+.profile-card.composition-notebook .profile-name {
+  font-style: italic;
+  font-size: 28px;
+}
+.profile-card.composition-notebook .profile-bio {
+  line-height: 28px;
+}
+.profile-card.composition-notebook .profile-link {
+  border-width: 0 0 2px;
+}
+
+/* 20 — asymmetric image and a continuous architectural spine. */
+.profile-card.composition-architect {
+  border-left: 18px solid var(--profile-primary);
+}
+.profile-card.composition-architect .profile-cover {
+  width: 78%;
+  margin-left: auto;
+  aspect-ratio: 4 / 5;
+  border-bottom: 14px solid var(--profile-primary);
+}
+.profile-card.composition-architect .portrait-fade {
+  display: none;
+}
+.profile-card.composition-architect .profile-identity {
+  border-bottom: 1px solid var(--profile-text);
+  padding-block: 20px;
+}
+.profile-card.composition-architect .profile-name {
+  text-transform: uppercase;
+  font-size: 28px;
+  line-height: 1.1;
+  letter-spacing: -1px;
+}
+.profile-card.composition-architect .profile-contact {
+  border-left: 1px solid var(--profile-primary);
+  padding-left: 14px;
+}
+
+/* Small avatars stay clear of the template-specific cover decorations. */
+.profile-card:not(.portrait-card):not(.composition-standard):not(
+    .composition-gradient
+  )
+  .avatar-wrap {
+  margin-top: 12px;
+}
+.profile-card:not(.portrait-card):is(
+    .composition-minimal,
+    .composition-terminal,
+    .composition-notebook
+  ):not(.with-cover-photo)
+  .profile-cover {
+  display: none;
+}
+
+/* The picker uses the actual renderer, so every thumbnail shows its composition. */
+.design-form .template-gallery {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+.template-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 18px;
+}
+.template-filters button {
+  padding: 7px 10px;
+  border-radius: 20px;
+  border: 1px solid var(--template-filter-border, #d9cce6);
+  background: transparent;
+  color: inherit;
+  font-size: 11px;
+}
+.template-filters button[aria-pressed="true"] {
+  background: #7854d5;
+  border-color: #7854d5;
+  color: white;
+}
+.template-gallery .theme-option {
+  position: relative;
+  min-width: 0;
+  padding: 6px;
+  border-color: #dfd5e7;
+}
+.template-gallery .theme-option:hover {
+  border-color: #9775b5;
+}
+.template-preview {
+  position: relative;
+  height: 225px;
+  overflow: hidden;
+  border-radius: 5px;
+  background: #f2edf6;
+}
+.template-preview-scale {
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  width: 320px;
+  transform: translateX(-50%) scale(var(--thumbnail-scale, 0.25));
+  transform-origin: top center;
+  pointer-events: none;
+  user-select: none;
+}
+.template-preview .profile-card {
+  min-height: 500px;
+}
+.template-select {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  padding: 12px 3px 5px;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  font-size: 12px;
+  font-weight: 600;
+}
+.template-select::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 8px;
+}
+.template-select:focus-visible {
+  outline: none;
+}
+.template-select:focus-visible::after {
+  outline: 3px solid #7854d5;
+  outline-offset: 3px;
+}
+.template-select svg {
+  flex-shrink: 0;
+  color: #7854d5;
+}
+.template-gallery .theme-option > small {
+  display: block;
+  padding: 0 3px 7px;
+  font-size: 10px;
+  line-height: 1.6;
+  opacity: 0.75;
+}
+@media (max-width: 400px) {
+  .design-form .template-gallery {
+    gap: 10px;
+  }
+  .template-preview {
+    height: 190px;
+  }
+}

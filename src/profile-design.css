@@ -800,7 +800,6 @@
 .profile-card.portrait-card .profile-name {
   margin-top: 10px;
 }
-.portrait-card .profile-main-button,
 .portrait-card:is(.button-filled, .button-elevated) .profile-button {
   color: var(--portrait-button-ink);
 }

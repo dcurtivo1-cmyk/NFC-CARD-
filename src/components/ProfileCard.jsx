@@ -100,7 +100,7 @@ export default function ProfileCard({
         </div>
       )}
       <article
-        className={`profile-card ${portraitMode ? "portrait-card" : type === "card" ? "photo-circle" : ""} ${phone ? "in-phone" : ""} button-${design.buttonStyle} header-${headerLayout} links-${buttonLayout} background-${backgroundStyle} icon-${iconStyle} ${d.coverPhoto ? "with-cover-photo" : ""}`}
+        className={`profile-card ${portraitMode ? "portrait-card" : type === "card" ? "photo-circle" : ""} ${phone ? "in-phone" : ""} button-${design.buttonStyle} header-${headerLayout} links-${buttonLayout} background-${backgroundStyle} icon-${iconStyle} composition-${design.templateStyle || "standard"} ${d.coverPhoto ? "with-cover-photo" : ""}`}
         style={{
           "--profile-primary": design.primary,
           "--profile-bg": design.background,

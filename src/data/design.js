@@ -1,4 +1,5 @@
 export const designDefaults = {
+  templateStyle: "standard",
   headerLayout: "classic",
   buttonLayout: "stacked",
   backgroundStyle: "solid",

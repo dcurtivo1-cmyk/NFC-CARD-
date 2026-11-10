@@ -13,7 +13,9 @@ import {
   Move,
   UserRound,
 } from "lucide-react";
-import { themes } from "../data/presets";
+import { useEffect, useRef, useState } from "react";
+import { themes, blankDetails } from "../data/presets";
+import ProfileCard from "./ProfileCard";
 import {
   applyPalette,
   backgroundStyles,
@@ -28,6 +30,37 @@ import {
   photoStyles,
 } from "../data/design";
 import { FormSection } from "./DetailsForm";
+
+function TemplatePreview({ children, background }) {
+  const previewRef = useRef(null);
+  useEffect(() => {
+    const preview = previewRef.current;
+    const content = preview.firstElementChild;
+    const resize = () => {
+      const scale = Math.min(
+        (preview.clientWidth - 16) / content.offsetWidth,
+        (preview.clientHeight - 16) / content.offsetHeight,
+      );
+      preview.style.setProperty("--thumbnail-scale", String(scale));
+    };
+    const observer = new ResizeObserver(resize);
+    observer.observe(preview);
+    observer.observe(content);
+    resize();
+    return () => observer.disconnect();
+  }, []);
+  return (
+    <div
+      ref={previewRef}
+      className="template-preview"
+      style={{ background }}
+      aria-hidden="true"
+      inert
+    >
+      <div className="template-preview-scale">{children}</div>
+    </div>
+  );
+}
 
 function ChoiceGrid({ label, options, value, onChange, kind }) {
   return (
@@ -78,6 +111,7 @@ export default function DesignForm({
   businessCard = false,
   portraitSrc = "",
 }) {
+  const [templateCategory, setTemplateCategory] = useState("All");
   const portraitMode = businessCard && design.photoStyle !== "circle";
   const update = (patch) => {
     const next = { ...design, ...patch };
@@ -130,67 +164,105 @@ export default function DesignForm({
       )}
       <FormSection
         title="Choose your template"
-        description="Start with a complete look, then customize every detail."
+        description="20 distinct layouts. Choose a composition, then make the colors, fonts, and details yours."
         icon={LayoutTemplate}
       >
-        <fieldset>
-          <legend className="sr-only">Template</legend>
-          <div className="theme-grid">
-            {themes.map((theme) => (
+        <div
+          className="template-filters"
+          role="group"
+          aria-label="Filter templates"
+        >
+          {["All", "Business", "Creative", "Classic", "Minimal"].map(
+            (category) => (
               <button
                 type="button"
-                className={`theme-option ${design.id === theme.id ? "selected" : ""}`}
-                key={theme.id}
-                onClick={() =>
-                  onChange({
-                    ...theme,
-                    photoStyle: design.photoStyle ?? "portrait",
-                    portraitSize: design.portraitSize,
-                    portraitX: design.portraitX,
-                    portraitY: design.portraitY,
-                  })
-                }
-                aria-pressed={design.id === theme.id}
+                key={category}
+                aria-pressed={templateCategory === category}
+                onClick={() => setTemplateCategory(category)}
               >
-                <div
-                  className={`theme-art template-${theme.headerLayout} template-buttons-${theme.buttonLayout}`}
-                  style={{ background: theme.background }}
-                >
-                  <div
-                    className="theme-cover"
-                    style={{ background: theme.cover }}
-                  />
-                  {portraitMode ? (
-                    portraitSrc && (
-                      <img
-                        className="theme-portrait"
-                        src={portraitSrc}
-                        alt=""
-                      />
-                    )
-                  ) : (
-                    <span
-                      className="theme-avatar"
-                      style={{ background: theme.primary }}
-                    />
-                  )}
-                  <i style={{ background: theme.text }} />
-                  <i style={{ background: theme.text }} />
-                  <b
-                    style={{
-                      background: theme.primary,
-                      borderRadius: theme.radius / 2,
-                    }}
-                  />
-                  {design.id === theme.id && (
-                    <span className="theme-check">
-                      <Check size={13} />
-                    </span>
-                  )}
-                </div>
-                <span>{theme.name}</span>
+                {category}
+                {category === "All" ? " (20)" : ""}
               </button>
-            ))}
+            ),
+          )}
+        </div>
+        <fieldset>
+          <legend className="sr-only">Template</legend>
+          <div className="theme-grid template-gallery">
+            {themes
+              .filter(
+                (theme) =>
+                  templateCategory === "All" ||
+                  theme.category === templateCategory,
+              )
+              .map((theme) => (
+                <div
+                  className={`theme-option ${design.id === theme.id ? "selected" : ""}`}
+                  key={theme.id}
+                >
+                  <TemplatePreview background={theme.background}>
+                    <ProfileCard
+                      publicView
+                      document={{
+                        type: businessCard ? "card" : "social",
+                        design: {
+                          ...theme,
+                          photoStyle: design.photoStyle ?? "portrait",
+                        },
+                        details: {
+                          ...blankDetails,
+                          fullName: "Alex Morgan",
+                          displayName: "Alex Morgan",
+                          position: "Designer & creative partner",
+                          profilePhoto: portraitSrc || "/alex-portrait.svg",
+                          bio: "Good ideas. Thoughtful design. Let's create something together.",
+                          email: "hello@example.com",
+                          website: "https://example.com",
+                          instagram: "https://instagram.com/example",
+                          linkedin: "https://linkedin.com/in/example",
+                          actionUrl: "https://example.com",
+                          customLinks: [
+                            {
+                              id: "work",
+                              label: "My work",
+                              url: "https://example.com/work",
+                            },
+                            {
+                              id: "meet",
+                              label: "Let's talk",
+                              url: "https://example.com/meet",
+                            },
+                          ],
+                        },
+                      }}
+                    />
+                  </TemplatePreview>
+                  <button
+                    type="button"
+                    className="template-select"
+                    aria-label={theme.name}
+                    aria-describedby={`template-description-${theme.id}`}
+                    aria-pressed={design.id === theme.id}
+                    onClick={() =>
+                      onChange({
+                        ...theme,
+                        photoStyle: design.photoStyle ?? "portrait",
+                        portraitSize: design.portraitSize,
+                        portraitX: design.portraitX,
+                        portraitY: design.portraitY,
+                      })
+                    }
+                  >
+                    <span>{theme.name}</span>
+                    {design.id === theme.id && (
+                      <Check size={15} aria-hidden="true" />
+                    )}
+                  </button>
+                  <small id={`template-description-${theme.id}`}>
+                    {theme.description}
+                  </small>
+                </div>
+              ))}
           </div>
         </fieldset>
       </FormSection>

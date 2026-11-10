@@ -17,6 +17,24 @@ import { createDocument, themes } from "../src/data/presets.js";
 import { normalizeDesign } from "../src/lib/design.js";
 import { normalizeDocument } from "../src/lib/storage.js";
 
+test("all 20 compositions survive saving and independent palette changes", () => {
+  assert.equal(themes.length, 20);
+  assert.equal(new Set(themes.map((theme) => theme.templateStyle)).size, 20);
+  for (const theme of themes) {
+    const document = createDocument("card", true);
+    document.design = applyPalette(theme, colorPalettes[6]);
+    const saved = normalizeDocument(JSON.parse(JSON.stringify(document)));
+    assert.equal(saved.design.templateStyle, theme.templateStyle);
+    assert.equal(saved.design.headerLayout, theme.headerLayout);
+    assert.equal(saved.design.buttonLayout, theme.buttonLayout);
+    assert.deepEqual(saved.details, document.details);
+  }
+  assert.equal(
+    normalizeDesign({ templateStyle: "unsafe unknown" }).templateStyle,
+    "standard",
+  );
+});
+
 test("all design options survive the storage normalization boundary", () => {
   const options = {
     headerLayout: headerLayouts,

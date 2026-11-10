@@ -20,6 +20,10 @@ export function normalizeDesign(value = {}) {
     if (/^#[0-9a-f]{6}$/i.test(value?.[key])) design[key] = value[key];
   }
   const options = {
+    templateStyle: [
+      { id: "standard" },
+      ...themes.map((theme) => ({ id: theme.templateStyle })),
+    ],
     headerLayout: headerLayouts,
     buttonLayout: buttonLayouts,
     backgroundStyle: backgroundStyles,
