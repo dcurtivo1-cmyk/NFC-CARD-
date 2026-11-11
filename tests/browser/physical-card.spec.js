@@ -140,6 +140,9 @@ test("published physical cards export both sides with embedded logo, bleed and m
   ]) {
     await card.getByRole("button", { name, exact: true }).click();
     await expect(
+      card.locator('.physical-card-artwork [aria-label="TapSync brand"] rect'),
+    ).toHaveCount(0);
+    await expect(
       card.locator(".physical-card-artwork [data-card-qr]"),
     ).toHaveCount(0);
     await expect(
@@ -187,6 +190,36 @@ test("published physical cards export both sides with embedded logo, bleed and m
     expect(svg).toContain(
       (await readFile("public/TapSync_NFC_Sync.png")).toString("base64"),
     );
+    const rendered = await page.evaluate(async (source) => {
+      const url = URL.createObjectURL(
+        new Blob([source], { type: "image/svg+xml" }),
+      );
+      try {
+        const image = new Image();
+        image.src = url;
+        await image.decode();
+        const canvas = document.createElement("canvas");
+        canvas.width = 916;
+        canvas.height = 600;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(image, 0, 0, 916, 600);
+        const pixels = ctx.getImageData(670, 490, 150, 45).data;
+        let visiblePixels = 0;
+        for (let i = 0; i < pixels.length; i += 4) {
+          if (Math.min(pixels[i], pixels[i + 1], pixels[i + 2]) > 140)
+            visiblePixels++;
+        }
+        return {
+          edge: Array.from(ctx.getImageData(662, 487, 1, 1).data),
+          visiblePixels,
+        };
+      } finally {
+        URL.revokeObjectURL(url);
+      }
+    }, svg);
+    // The former white badge is gone, while the actual logo remains bright on navy.
+    expect(rendered.edge).toEqual([21, 30, 48, 255]);
+    expect(rendered.visiblePixels).toBeGreaterThan(250);
     if (side === "back") expect(svg).toContain(qrPath);
     else {
       expect(svg).not.toContain(qrPath);

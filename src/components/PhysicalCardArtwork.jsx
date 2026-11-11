@@ -1,4 +1,5 @@
 import { QRCodeSVG } from "qrcode.react";
+import { useId } from "react";
 import { cardTextLines } from "../lib/physical-card";
 import { physicalCardStyle } from "../data/physical-card";
 
@@ -60,6 +61,7 @@ function Logo({ src, x, y, size = 11 }) {
 }
 
 function TapSyncBrand({ background }) {
+  const contrastId = `tapsync-contrast-${useId().replaceAll(":", "")}`;
   const channels = background
     .match(/[a-f\d]{2}/gi)
     .map((part) => parseInt(part, 16));
@@ -67,16 +69,6 @@ function TapSyncBrand({ background }) {
     channels[0] * 0.299 + channels[1] * 0.587 + channels[2] * 0.114 < 140;
   return (
     <g aria-label="TapSync brand">
-      {dark && (
-        <rect
-          x="62.8"
-          y="45.5"
-          width="17.3"
-          height="5.2"
-          rx="0.8"
-          fill="#ffffff"
-        />
-      )}
       <svg
         x="64"
         y="46"
@@ -88,10 +80,30 @@ function TapSyncBrand({ background }) {
         role="img"
         aria-label="TapSync logo"
       >
+        {dark && (
+          <defs>
+            <filter
+              id={contrastId}
+              x="0"
+              y="0"
+              width="100%"
+              height="100%"
+              colorInterpolationFilters="sRGB"
+            >
+              <feComponentTransfer>
+                <feFuncR type="linear" slope="0.4" intercept="0.6" />
+                <feFuncG type="linear" slope="0.4" intercept="0.6" />
+                <feFuncB type="linear" slope="0.4" intercept="0.6" />
+                <feFuncA type="identity" />
+              </feComponentTransfer>
+            </filter>
+          </defs>
+        )}
         <image
           href={`${import.meta.env.BASE_URL}TapSync_NFC_Sync.png`}
           width="500"
           height="500"
+          filter={dark ? `url(#${contrastId})` : undefined}
         />
       </svg>
     </g>
