@@ -5,7 +5,7 @@
       "destination": "https://folio-nfc-studio.buffhutch.chatgpt.site/api/pages/:id"
     },
     {
-      "source": "/((?!api/|assets/|sw.js|favicon.svg|alex-portrait.svg).*)",
+      "source": "/((?!api/|assets/|sw.js|favicon.svg|alex-portrait.svg|TapSync_NFC_Sync.png).*)",
       "destination": "/index.html"
     }
   ]

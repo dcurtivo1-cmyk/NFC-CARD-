@@ -81,10 +81,9 @@ test("logo transparency and white artwork survive crop, save, publishing and pri
   const published = await page.request.get(`/api/pages/${saved.id}`);
   expect((await published.json()).document.details.logo).toBe(logo);
   await page.getByRole("button", { name: "Midnight", exact: true }).click();
-  await expect(page.locator(".physical-card-artwork image")).toHaveAttribute(
-    "href",
-    logo,
-  );
+  await expect(
+    page.locator('.physical-card-artwork image[aria-label="Business logo"]'),
+  ).toHaveAttribute("href", logo);
   const printed = await page
     .locator(".physical-card-artwork")
     .evaluate(async (svg) => {

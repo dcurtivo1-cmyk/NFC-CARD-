@@ -38,7 +38,12 @@ test("physical card follows edits and saved drafts on mobile", async ({
       "data-template",
       id,
     );
-    await expect(card.locator(".physical-card-artwork svg")).toHaveCount(0);
+    await expect(
+      card.locator(".physical-card-artwork [data-card-qr]"),
+    ).toHaveCount(0);
+    await expect(
+      card.locator('.physical-card-artwork [aria-label="TapSync logo"]'),
+    ).toHaveCount(1);
     await expect(card.locator(".physical-card-artwork")).not.toContainText(
       "QR after",
     );
@@ -53,7 +58,7 @@ test("physical card follows edits and saved drafts on mobile", async ({
   await expect(
     card.getByRole("button", { name: "Download front SVG" }),
   ).toBeDisabled();
-  await expect(card.locator("svg svg")).toHaveCount(0);
+  await expect(card.locator("[data-card-qr]")).toHaveCount(0);
   await page
     .getByRole("button", { name: "Make it yours", exact: true })
     .last()
@@ -134,12 +139,16 @@ test("published physical cards export both sides with embedded logo, bleed and m
     "Outline",
   ]) {
     await card.getByRole("button", { name, exact: true }).click();
-    await expect(card.locator(".physical-card-artwork svg")).toHaveCount(0);
-    await expect(card.locator(".physical-card-thumbnail svg")).toHaveCount(0);
+    await expect(
+      card.locator(".physical-card-artwork [data-card-qr]"),
+    ).toHaveCount(0);
+    await expect(
+      card.locator(".physical-card-thumbnail [data-card-qr]"),
+    ).toHaveCount(0);
     await card.getByRole("button", { name: "Back", exact: true }).click();
     expect(
       await card
-        .locator(".physical-card-artwork svg path")
+        .locator(".physical-card-artwork [data-card-qr] path")
         .last()
         .getAttribute("d"),
     ).toBe(qrPath);
@@ -167,6 +176,17 @@ test("published physical cards export both sides with embedded logo, bleed and m
     expect(svg).toContain('fill="#151e30"');
     expect(svg).toContain("Maria &amp; Clara Santos");
     expect(svg).toContain(doc.details.logo);
+    expect(svg).toContain('aria-label="TapSync logo"');
+    const brand = card.locator(
+      '.physical-card-artwork [aria-label="TapSync logo"]',
+    );
+    await expect(brand).toHaveAttribute("x", "64");
+    await expect(brand).toHaveAttribute("y", "46");
+    // Printer files embed the original brand PNG rather than an external path.
+    expect(svg).not.toContain('href="/TapSync_NFC_Sync.png"');
+    expect(svg).toContain(
+      (await readFile("public/TapSync_NFC_Sync.png")).toString("base64"),
+    );
     if (side === "back") expect(svg).toContain(qrPath);
     else {
       expect(svg).not.toContain(qrPath);

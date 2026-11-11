@@ -59,6 +59,45 @@ function Logo({ src, x, y, size = 11 }) {
   ) : null;
 }
 
+function TapSyncBrand({ background }) {
+  const channels = background
+    .match(/[a-f\d]{2}/gi)
+    .map((part) => parseInt(part, 16));
+  const dark =
+    channels[0] * 0.299 + channels[1] * 0.587 + channels[2] * 0.114 < 140;
+  return (
+    <g aria-label="TapSync brand">
+      {dark && (
+        <rect
+          x="62.8"
+          y="45.5"
+          width="17.3"
+          height="5.2"
+          rx="0.8"
+          fill="#ffffff"
+        />
+      )}
+      <svg
+        x="64"
+        y="46"
+        width="15"
+        height="4.5"
+        viewBox="30 180 450 150"
+        preserveAspectRatio="xMaxYMid meet"
+        overflow="hidden"
+        role="img"
+        aria-label="TapSync logo"
+      >
+        <image
+          href={`${import.meta.env.BASE_URL}TapSync_NFC_Sync.png`}
+          width="500"
+          height="500"
+        />
+      </svg>
+    </g>
+  );
+}
+
 function Decoration({ style, front }) {
   const { id, accent } = style;
   if (id === "classic")
@@ -213,7 +252,7 @@ function Front({ details: d, style }) {
             value={d.businessName}
             x={d.logo ? 16 : 7}
             y={47}
-            width={48}
+            width={44}
             size={2.5}
             limit={32}
             maxLines={1}
@@ -256,7 +295,7 @@ function Front({ details: d, style }) {
       <CardText
         value={d.position}
         x={x}
-        y={minimal ? 36 : 43}
+        y={minimal ? 36 : 41}
         width={nameWidth}
         size={2.8}
         limit={split ? 28 : 40}
@@ -266,7 +305,7 @@ function Front({ details: d, style }) {
       {!centered && (
         <text
           x="78.6"
-          y={minimal || split ? 49 : 20}
+          y={20}
           fontSize="1.65"
           letterSpacing="0.2"
           textAnchor="end"
@@ -334,6 +373,7 @@ export default function PhysicalCardArtwork({
           <Logo src={details.logo} x={65} y={24} />
           {url ? (
             <QRCodeSVG
+              data-card-qr="true"
               x={29.3}
               y={16}
               value={url}
@@ -386,6 +426,7 @@ export default function PhysicalCardArtwork({
           </text>
         </>
       )}
+      <TapSyncBrand background={style.background} />
     </svg>
   );
 }
