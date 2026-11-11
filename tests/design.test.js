@@ -16,6 +16,7 @@ import {
 import { createDocument, themes } from "../src/data/presets.js";
 import { normalizeDesign } from "../src/lib/design.js";
 import { normalizeDocument } from "../src/lib/storage.js";
+import { physicalCardTemplates } from "../src/data/physical-card.js";
 
 test("all 20 compositions survive saving and independent palette changes", () => {
   assert.equal(themes.length, 20);
@@ -37,6 +38,7 @@ test("all 20 compositions survive saving and independent palette changes", () =>
 
 test("all design options survive the storage normalization boundary", () => {
   const options = {
+    physicalTemplate: physicalCardTemplates,
     headerLayout: headerLayouts,
     buttonLayout: buttonLayouts,
     backgroundStyle: backgroundStyles,
@@ -56,11 +58,13 @@ test("all design options survive the storage normalization boundary", () => {
   assert.equal(restored.portraitX, -12);
   assert.equal(restored.portraitY, 9);
   const constrained = normalizeDesign({
+    physicalTemplate: "unknown-template",
     portraitSize: 900,
     portraitX: -999,
     portraitY: NaN,
   });
   assert.equal(constrained.portraitSize, 140);
+  assert.equal(constrained.physicalTemplate, "classic");
   assert.equal(constrained.portraitX, -35);
   assert.equal(constrained.portraitY, 0);
   for (const [key, choices] of Object.entries(options)) {

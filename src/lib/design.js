@@ -1,4 +1,5 @@
 import { themes } from "../data/presets.js";
+import { physicalCardTemplates } from "../data/physical-card.js";
 import {
   backgroundStyles,
   buttonLayouts,
@@ -20,6 +21,7 @@ export function normalizeDesign(value = {}) {
     if (/^#[0-9a-f]{6}$/i.test(value?.[key])) design[key] = value[key];
   }
   const options = {
+    physicalTemplate: physicalCardTemplates,
     templateStyle: [
       { id: "standard" },
       ...themes.map((theme) => ({ id: theme.templateStyle })),

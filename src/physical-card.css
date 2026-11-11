@@ -81,6 +81,60 @@
 .physical-card-spec {
   text-align: center;
 }
+.physical-template-picker {
+  border: 0;
+  padding: 0;
+  margin: 18px 0;
+  min-width: 0;
+}
+.physical-template-picker legend {
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+.physical-template-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+.physical-template-grid button {
+  padding: 7px;
+  min-width: 0;
+  border: 1px solid var(--studio-border, #e8e0ed);
+  border-radius: 10px;
+  text-align: left;
+  color: inherit;
+}
+.physical-template-grid button[aria-pressed="true"] {
+  border-color: #8662cf;
+  box-shadow: 0 0 0 1px #8662cf;
+}
+.physical-template-grid button:focus-visible {
+  outline: 2px solid #8662cf;
+  outline-offset: 3px;
+}
+.physical-template-grid strong,
+.physical-template-grid small {
+  display: block;
+  padding: 0 3px;
+}
+.physical-template-grid strong {
+  font-size: 12px;
+  margin-top: 6px;
+}
+.physical-template-grid small {
+  font-size: 10px;
+  margin-top: 2px;
+}
+.physical-card-thumbnail {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 5px;
+}
+.physical-card-save {
+  margin-top: 16px;
+}
 .physical-card-downloads {
   display: flex;
   flex-wrap: wrap;

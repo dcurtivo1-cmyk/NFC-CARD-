@@ -21,6 +21,25 @@ test("physical card follows edits and saved drafts on mobile", async ({
     .click();
   await expect(card).toBeVisible();
   await expect(page.locator(".preview-stage")).toBeHidden();
+  const templates = card.getByRole("group", { name: "Choose a card template" });
+  for (const [name, id] of [
+    ["Classic", "classic"],
+    ["Midnight", "midnight"],
+    ["Minimal", "minimal"],
+    ["Split", "split"],
+    ["Wave", "wave"],
+    ["Outline", "outline"],
+  ]) {
+    await templates.getByRole("button", { name, exact: true }).click();
+    await expect(
+      templates.getByRole("button", { name, exact: true }),
+    ).toHaveAttribute("aria-pressed", "true");
+    await expect(card.locator(".physical-card-artwork")).toHaveAttribute(
+      "data-template",
+      id,
+    );
+  }
+  await templates.getByRole("button", { name: "Classic", exact: true }).click();
   await expect(card.locator(".physical-card-artwork")).toContainText(
     "Maria Clara Santos",
   );
@@ -39,6 +58,7 @@ test("physical card follows edits and saved drafts on mobile", async ({
   await expect(
     card.locator(".physical-card-artwork > rect").first(),
   ).toHaveAttribute("fill", "#123456");
+  await templates.getByRole("button", { name: "Outline", exact: true }).click();
   await page.getByRole("button", { name: "Save draft", exact: true }).click();
   const saved = await page.evaluate(
     () => JSON.parse(localStorage.getItem("folio-studio-documents-v1"))[0],
@@ -51,9 +71,13 @@ test("physical card follows edits and saved drafts on mobile", async ({
   await expect(card.locator(".physical-card-artwork")).toContainText(
     "Maria Clara Santos",
   );
+  await expect(card.locator(".physical-card-artwork")).toHaveAttribute(
+    "data-template",
+    "outline",
+  );
   await expect(
-    card.locator(".physical-card-artwork > rect").first(),
-  ).toHaveAttribute("fill", "#123456");
+    templates.getByRole("button", { name: "Outline", exact: true }),
+  ).toHaveAttribute("aria-pressed", "true");
   expect(
     await page.evaluate(
       () => document.documentElement.scrollWidth <= innerWidth,
@@ -99,6 +123,7 @@ test("published physical cards export both sides with embedded logo, bleed and m
   expect(await card.locator("svg svg path").last().getAttribute("d")).toBe(
     qrPath,
   );
+  await card.getByRole("button", { name: "Midnight", exact: true }).click();
   for (const side of ["front", "back"]) {
     await card
       .getByRole("button", {
@@ -116,6 +141,8 @@ test("published physical cards export both sides with embedded logo, bleed and m
     expect(svg).toContain('width="91.6mm"');
     expect(svg).toContain('height="59.98mm"');
     expect(svg).toContain('viewBox="-3 -3 91.6 59.98"');
+    expect(svg).toContain('data-template="midnight"');
+    expect(svg).toContain('fill="#151e30"');
     expect(svg).toContain("Maria &amp; Clara Santos");
     expect(svg).toContain(doc.details.logo);
     expect(svg).toContain(qrPath);
@@ -130,4 +157,64 @@ test("published physical cards export both sides with embedded logo, bleed and m
   await card.getByRole("button", { name: "Front", exact: true }).click();
   await card.screenshot({ path: "test-results/physical-card-desktop.png" });
   expect(errors).toEqual([]);
+});
+
+test("physical template survives digital theme changes, publishing and saving from Share", async ({
+  page,
+}) => {
+  test.setTimeout(90_000);
+  await page.goto("/editor?type=card&sample=1");
+  await page
+    .getByRole("button", { name: "Physical NFC card", exact: true })
+    .first()
+    .click();
+  await page.getByRole("button", { name: "Split", exact: true }).click();
+  await page
+    .getByRole("button", { name: "Make it yours", exact: true })
+    .last()
+    .click();
+  await page
+    .getByRole("group", { name: "Template", exact: true })
+    .getByRole("button", { name: "Elegant", exact: true })
+    .click();
+  await expect(page.locator(".physical-card-artwork")).toHaveAttribute(
+    "data-template",
+    "split",
+  );
+  await page.getByRole("button", { name: "Final look", exact: false }).click();
+  await page
+    .getByRole("button", { name: "Generate my demo", exact: true })
+    .click();
+  const modal = page.getByRole("dialog");
+  await expect(modal.locator(".physical-card-artwork")).toHaveAttribute(
+    "data-template",
+    "split",
+  );
+  await modal.getByRole("button", { name: "Wave", exact: true }).click();
+  await modal
+    .getByRole("button", { name: "Save card design", exact: true })
+    .click();
+  await expect(
+    modal.getByRole("button", { name: "Save card design", exact: true }),
+  ).toHaveCount(0);
+  const saved = await page.evaluate(
+    () => JSON.parse(localStorage.getItem("folio-studio-documents-v1"))[0],
+  );
+  expect(saved.design.physicalTemplate).toBe("wave");
+  await page.reload();
+  await page.getByRole("button", { name: "Share & QR", exact: true }).click();
+  await expect(modal.locator(".physical-card-artwork")).toHaveAttribute(
+    "data-template",
+    "wave",
+  );
+  await page.getByRole("button", { name: "Close dialog", exact: true }).click();
+  await page.goto(`/editor/${saved.id}`);
+  await page
+    .getByRole("button", { name: "Physical NFC card", exact: true })
+    .first()
+    .click();
+  await expect(page.locator(".physical-card-artwork")).toHaveAttribute(
+    "data-template",
+    "wave",
+  );
 });

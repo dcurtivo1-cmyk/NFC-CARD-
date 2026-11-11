@@ -27,6 +27,7 @@ export default function ShareModal({
 }) {
   const [document, setDocument] = useState(initialDocument);
   const [publishing, setPublishing] = useState(false);
+  const [cardChanged, setCardChanged] = useState(false);
   const published = Boolean(document.publishedAt);
   const url =
     preferredPublicUrl(document.publishedUrl) || profileUrl(document.id);
@@ -40,6 +41,7 @@ export default function ShareModal({
     try {
       const next = await publishPage(document);
       setDocument(next);
+      setCardChanged(false);
       onPublished?.(next);
       try {
         saveDocument(next, "generated");
@@ -210,7 +212,32 @@ export default function ShareModal({
           </div>
         </>
       )}
-      <PhysicalCard document={document} />
+      <PhysicalCard
+        document={document}
+        disabled={publishing}
+        onTemplateChange={(physicalTemplate) => {
+          setDocument((doc) => ({
+            ...doc,
+            design: { ...doc.design, physicalTemplate },
+          }));
+          setCardChanged(true);
+        }}
+      />
+      {cardChanged && (
+        <div className="physical-card-save">
+          <p className="muted text-sm">
+            Save this template to keep it the next time you open your card.
+          </p>
+          <button
+            className="btn btn-primary"
+            disabled={publishing}
+            onClick={publish}
+          >
+            {publishing && <LoaderCircle size={16} className="spin" />}
+            {publishing ? "Saving card design…" : "Save card design"}
+          </button>
+        </div>
+      )}
     </Modal>
   );
 }

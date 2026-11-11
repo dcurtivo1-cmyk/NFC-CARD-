@@ -6,10 +6,29 @@ import { join } from "node:path";
 import { openLocalDatabase } from "../server/local-db.js";
 import { handlePagesApi, MAX_PAGE_BYTES } from "../server/pages-api.js";
 import { createDocument, themes } from "../src/data/presets.js";
+import { physicalCardTemplates } from "../src/data/physical-card.js";
 
 const id = "fl-12345678-1234-4234-8234-123456789abc";
 const token = "a".repeat(64);
 const url = `https://folio.example/api/pages/${id}`;
+
+test("physical card templates survive the publishing API", async () => {
+  const db = openLocalDatabase(":memory:");
+  try {
+    for (const template of physicalCardTemplates) {
+      const document = createDocument("card", true);
+      document.design.physicalTemplate = template.id;
+      assert.equal(
+        (await handlePagesApi(request("PUT", document), db)).status,
+        200,
+      );
+      const saved = await (await handlePagesApi(request(), db)).json();
+      assert.equal(saved.document.design.physicalTemplate, template.id);
+    }
+  } finally {
+    db.close();
+  }
+});
 
 test("publishing preserves every template and custom portrait placement", async () => {
   const db = openLocalDatabase(":memory:");

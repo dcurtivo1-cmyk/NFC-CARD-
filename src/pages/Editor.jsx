@@ -359,7 +359,13 @@ export default function Editor() {
               portraitSrc={document.details.profilePhoto}
               hasCoverPhoto={Boolean(document.details.coverPhoto)}
               onChange={(design) => {
-                setDocument((doc) => ({ ...doc, design }));
+                setDocument((doc) => ({
+                  ...doc,
+                  design: {
+                    ...design,
+                    physicalTemplate: doc.design.physicalTemplate || "classic",
+                  },
+                }));
                 setDirty(true);
                 setRecovered(false);
               }}
@@ -492,7 +498,19 @@ export default function Editor() {
             <span className="preview-dot" />
             This is your good side. Every side is.
           </div>
-          {preview === "physical" && <PhysicalCard document={document} />}
+          {preview === "physical" && (
+            <PhysicalCard
+              document={document}
+              onTemplateChange={(physicalTemplate) => {
+                setDocument((doc) => ({
+                  ...doc,
+                  design: { ...doc.design, physicalTemplate },
+                }));
+                setDirty(true);
+                setRecovered(false);
+              }}
+            />
+          )}
           <div className="recovery-status">
             <Check size={13} />
             {recoveryError

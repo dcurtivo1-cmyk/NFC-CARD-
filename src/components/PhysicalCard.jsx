@@ -6,6 +6,10 @@ import { isPublicHost } from "../lib/publishing";
 import { downloadBlob, profileUrl } from "../lib/profile";
 import { cardTextLines, physicalCardBlob } from "../lib/physical-card";
 import { useFeedback } from "./UI";
+import {
+  physicalCardTemplates,
+  physicalCardStyle,
+} from "../data/physical-card";
 
 function CardText({
   value,
@@ -50,43 +54,136 @@ function TapIcon({ x, y, color }) {
   );
 }
 
-export function PhysicalCardArtwork({ document, side, url, svgRef }) {
+export function PhysicalCardArtwork({
+  document,
+  side,
+  url,
+  svgRef,
+  thumbnail = false,
+}) {
   const { details: d, design } = document;
   const front = side === "front";
-  const color = design.text;
-  const qrX = front ? 54 : 29.3;
+  const style = physicalCardStyle(design);
+  const mirrored = style.id === "outline" && front;
+  const split = style.id === "split";
+  const color = style.text;
+  const identityColor = front && split ? style.brandText : color;
+  const nameX = mirrored ? 37 : 5;
+  const nameWidth = mirrored ? 43 : 44;
+  const logoX = mirrored ? 37 : 5;
+  const businessX = logoX + (d.logo ? 14 : 0);
+  const qrX = front ? (mirrored ? 5 : 54) : 29.3;
   const qrY = front ? 18 : 16;
   return (
     <svg
       ref={svgRef}
-      className="physical-card-artwork"
+      className={
+        thumbnail ? "physical-card-thumbnail" : "physical-card-artwork"
+      }
+      data-template={style.id}
       xmlns="http://www.w3.org/2000/svg"
       width="85.6mm"
       height="53.98mm"
       viewBox="0 0 85.6 53.98"
       role="img"
       aria-label={`Physical NFC card ${side} for ${d.fullName || "your name"}`}
-      fontFamily="Arial, sans-serif"
+      fontFamily={
+        style.id === "midnight" ? "Georgia, serif" : "Arial, sans-serif"
+      }
       fill={color}
     >
       <title>{`Physical NFC card — ${side} — ${d.fullName || "Your full name"}`}</title>
       <desc>
         Trim size 85.6 × 53.98 mm. Downloads include 3 mm bleed on each edge.
       </desc>
-      <rect
-        x="-3"
-        y="-3"
-        width="91.6"
-        height="59.98"
-        fill={design.background}
-      />
-      <rect x="-3" y="-3" width="91.6" height="5" fill={design.primary} />
+      <rect x="-3" y="-3" width="91.6" height="59.98" fill={style.background} />
+      {style.id === "classic" && (
+        <rect x="-3" y="-3" width="91.6" height="5" fill={style.accent} />
+      )}
+      {style.id === "midnight" && (
+        <>
+          <rect
+            x="2.5"
+            y="2.5"
+            width="80.6"
+            height="48.98"
+            fill="none"
+            stroke={style.accent}
+            strokeWidth="0.35"
+          />
+          <path
+            d="M5 19H23 M62 51.48H83.1"
+            stroke={style.accent}
+            strokeWidth="0.8"
+          />
+        </>
+      )}
+      {style.id === "minimal" && (
+        <path
+          d={front ? "M5 18H49" : "M29.3 13H56.3"}
+          stroke={style.accent}
+          strokeWidth="0.3"
+        />
+      )}
+      {split &&
+        (front ? (
+          <path d="M-3-3H51V56.98H-3Z" fill={style.accent} />
+        ) : (
+          <>
+            <path
+              d="M-3-3H88.6V3H-3Z M-3 51H88.6V56.98H-3Z"
+              fill={style.accent}
+            />
+            <path
+              d="M-3 17H24V43H-3Z M62 17H88.6V43H62Z"
+              fill={style.accent}
+              fillOpacity="0.12"
+            />
+          </>
+        ))}
+      {style.id === "wave" && (
+        <>
+          <path
+            d="M-3-3H88.6V8C56 23 28-3-3 12Z"
+            fill={style.accent}
+            fillOpacity="0.14"
+          />
+          <path
+            d="M-3 49C25 37 56 64 88.6 45V56.98H-3Z"
+            fill={style.accent}
+            fillOpacity="0.18"
+          />
+          <path
+            d="M-3 53C25 43 56 64 88.6 50"
+            fill="none"
+            stroke={style.accent}
+            strokeWidth="0.6"
+          />
+        </>
+      )}
+      {style.id === "outline" && (
+        <>
+          <rect
+            x="2.5"
+            y="2.5"
+            width="80.6"
+            height="48.98"
+            rx="2"
+            fill="none"
+            stroke={style.accent}
+            strokeWidth="0.5"
+          />
+          {front && (
+            <path d="M34.5 18V47" stroke={style.accent} strokeWidth="0.35" />
+          )}
+        </>
+      )}
       {front ? (
         <>
           {d.logo && (
             <image
               href={d.logo}
-              x="5"
+              x={logoX}
               y="6"
               width="11"
               height="11"
@@ -96,18 +193,32 @@ export function PhysicalCardArtwork({ document, side, url, svgRef }) {
           )}
           <CardText
             value={d.businessName}
-            x={d.logo ? 19 : 5}
+            x={businessX}
             y={10}
-            width={d.logo ? 39 : 53}
+            width={
+              mirrored
+                ? 80 - businessX
+                : split
+                  ? 48 - businessX
+                  : d.logo
+                    ? 39
+                    : 53
+            }
+            fill={identityColor}
             size={2.8}
             limit={25}
           />
-          <TapIcon x={69} y={5} color={color} />
+          <TapIcon
+            x={mirrored ? 12 : 69}
+            y={5}
+            color={style.id === "midnight" ? style.accent : color}
+          />
           <CardText
             value={d.fullName || "Your full name"}
-            x={5}
+            x={nameX}
             y={27}
-            width={44}
+            width={nameWidth}
+            fill={identityColor}
             size={4}
             limit={20}
             maxLines={3}
@@ -115,9 +226,10 @@ export function PhysicalCardArtwork({ document, side, url, svgRef }) {
           />
           <CardText
             value={d.position}
-            x={5}
+            x={nameX}
             y={43}
-            width={44}
+            width={nameWidth}
+            fill={identityColor}
             size={2.8}
             limit={26}
           />
@@ -148,7 +260,15 @@ export function PhysicalCardArtwork({ document, side, url, svgRef }) {
           )}
         </>
       )}
-      {url ? (
+      {thumbnail ? (
+        <g transform={`translate(${qrX} ${qrY})`}>
+          <rect width="27" height="27" fill="#ffffff" />
+          <path
+            d="M4 4H11V11H4Z M16 4H23V11H16Z M4 16H11V23H4Z M15 15H19V19H23V23H15Z"
+            fill="#111111"
+          />
+        </g>
+      ) : url ? (
         <QRCodeSVG
           x={qrX}
           y={qrY}
@@ -192,7 +312,7 @@ export function PhysicalCardArtwork({ document, side, url, svgRef }) {
         </g>
       )}
       <text
-        x={front ? 67.5 : 42.8}
+        x={front ? qrX + 13.5 : 42.8}
         y={front ? 49 : 48}
         textAnchor="middle"
         fontSize="2.3"
@@ -203,11 +323,16 @@ export function PhysicalCardArtwork({ document, side, url, svgRef }) {
   );
 }
 
-export default function PhysicalCard({ document }) {
+export default function PhysicalCard({
+  document,
+  onTemplateChange,
+  disabled = false,
+}) {
   const [side, setSide] = useState("front");
   const [busy, setBusy] = useState(false);
   const svgRef = useRef();
   const { notify } = useFeedback();
+  const selectedTemplate = physicalCardStyle(document.design).id;
   const url =
     document.publishedAt && document.id
       ? preferredPublicUrl(document.publishedUrl) || profileUrl(document.id)
@@ -244,9 +369,49 @@ export default function PhysicalCard({ document }) {
         <span>PRINT DESIGN</span>
       </div>
       <p>
-        Your full name, job title, business logo, and colors update
-        automatically from your page.
+        Choose a print template. Your full name, job title, business logo, and
+        QR follow automatically.
       </p>
+      {onTemplateChange && (
+        <fieldset
+          className="physical-template-picker"
+          disabled={busy || disabled}
+        >
+          <legend>Choose a card template</legend>
+          <div className="physical-template-grid">
+            {physicalCardTemplates.map((template) => (
+              <button
+                type="button"
+                key={template.id}
+                aria-label={template.name}
+                aria-pressed={selectedTemplate === template.id}
+                onClick={() => onTemplateChange(template.id)}
+                title={template.description}
+              >
+                <span aria-hidden="true">
+                  <PhysicalCardArtwork
+                    document={{
+                      ...document,
+                      design: {
+                        ...document.design,
+                        physicalTemplate: template.id,
+                      },
+                    }}
+                    side="front"
+                    thumbnail
+                  />
+                </span>
+                <strong>{template.name}</strong>
+                <small>
+                  {selectedTemplate === template.id
+                    ? "Selected"
+                    : "Select template"}
+                </small>
+              </button>
+            ))}
+          </div>
+        </fieldset>
+      )}
       <div className="physical-card-sides" role="group" aria-label="Card side">
         {["front", "back"].map((value) => (
           <button
@@ -301,8 +466,10 @@ export default function PhysicalCard({ document }) {
       <details className="physical-card-instructions">
         <summary>Customize & print instructions</summary>
         <p>
-          Edit Your details for the name, title, and logo. Use Make it yours to
-          change the colors. Download each side separately.
+          Choose a template above. Edit Your details for the name, title, and
+          logo. Classic and Wave follow your page colors; Split and Outline use
+          your brand accent. Midnight and Minimal have their own print palettes.
+          Download each side separately.
         </p>
         <p>
           Give your printer the SVG files or 2164 × 1417 px PNGs. Artwork size:
