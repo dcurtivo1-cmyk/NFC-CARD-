@@ -15,6 +15,12 @@ test("physical card follows edits and saved drafts on mobile", async ({
   await page
     .getByLabel("Position / title", { exact: true })
     .fill("Creative Director");
+  await page
+    .getByRole("button", { name: "Physical NFC card", exact: true })
+    .first()
+    .click();
+  await expect(card).toBeVisible();
+  await expect(page.locator(".preview-stage")).toBeHidden();
   await expect(card.locator(".physical-card-artwork")).toContainText(
     "Maria Clara Santos",
   );
@@ -38,6 +44,10 @@ test("physical card follows edits and saved drafts on mobile", async ({
     () => JSON.parse(localStorage.getItem("folio-studio-documents-v1"))[0],
   );
   await page.goto(`/editor/${saved.id}`);
+  await page
+    .getByRole("group", { name: "Preview type" })
+    .getByRole("button", { name: "Physical NFC card", exact: true })
+    .click();
   await expect(card.locator(".physical-card-artwork")).toContainText(
     "Maria Clara Santos",
   );

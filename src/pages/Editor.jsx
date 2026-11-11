@@ -21,6 +21,7 @@ import {
   Sparkles,
   ShieldCheck,
   FileCheck2,
+  CreditCard,
 } from "lucide-react";
 import { createDocument, products } from "../data/presets";
 import {
@@ -66,6 +67,7 @@ export default function Editor() {
   const [initial] = useState(() => loadInitial(id, params));
   const [document, setDocument] = useState(initial.doc || createDocument());
   const [step, setStep] = useState(0);
+  const [preview, setPreview] = useState("digital");
   const [errors, setErrors] = useState({});
   const [dirty, setDirty] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -260,6 +262,18 @@ export default function Editor() {
         </div>
         <div className="editor-top-actions">
           <button
+            className="btn btn-secondary"
+            onClick={() => {
+              setPreview("physical");
+              window.document
+                .getElementById("live-preview")
+                ?.scrollIntoView({ behavior: "smooth", block: "start" });
+            }}
+          >
+            <CreditCard size={16} />
+            Physical NFC card
+          </button>
+          <button
             className="icon-button help-button"
             onClick={() => setHelp(true)}
             aria-label="About saving and sharing"
@@ -453,14 +467,32 @@ export default function Editor() {
               Updates as you go
             </span>
           </div>
-          <div className="preview-stage">
+          <div
+            className="physical-card-sides preview-switch"
+            role="group"
+            aria-label="Preview type"
+          >
+            <button
+              aria-pressed={preview === "digital"}
+              onClick={() => setPreview("digital")}
+            >
+              <Smartphone size={14} /> Digital page
+            </button>
+            <button
+              aria-pressed={preview === "physical"}
+              onClick={() => setPreview("physical")}
+            >
+              <CreditCard size={14} /> Physical NFC card
+            </button>
+          </div>
+          <div className="preview-stage" hidden={preview !== "digital"}>
             <ProfileCard document={document} phone publicView />
           </div>
-          <div className="preview-caption">
+          <div className="preview-caption" hidden={preview !== "digital"}>
             <span className="preview-dot" />
             This is your good side. Every side is.
           </div>
-          <PhysicalCard document={document} />
+          {preview === "physical" && <PhysicalCard document={document} />}
           <div className="recovery-status">
             <Check size={13} />
             {recoveryError
