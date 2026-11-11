@@ -138,6 +138,7 @@ export default function DetailsForm({ document, onChange, errors }) {
           name="logo"
           value={d.logo}
           onChange={onChange}
+          preserveTransparency
         />
         <ImageUpload
           label="Cover photo"

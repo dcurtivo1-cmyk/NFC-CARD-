@@ -16,6 +16,7 @@ export default function ImageUpload({
   aspectRatio = 1,
   outputWidth = 512,
   preservePortrait = false,
+  preserveTransparency = false,
 }) {
   const [source, setSource] = useState(null);
   const [loaded, setLoaded] = useState(null);
@@ -86,8 +87,10 @@ export default function ImageUpload({
     const sx = ((loaded.naturalWidth - sourceWidth) * x) / 100;
     const sy = ((loaded.naturalHeight - sourceHeight) * y) / 100;
     ctx.clearRect(0, 0, outputWidth, outputHeight);
-    ctx.fillStyle = "#ffffff";
-    ctx.fillRect(0, 0, outputWidth, outputHeight);
+    if (!preserveTransparency) {
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(0, 0, outputWidth, outputHeight);
+    }
     ctx.drawImage(
       loaded,
       sx,
@@ -110,6 +113,7 @@ export default function ImageUpload({
     outputHeight,
     canvasWidth,
     preservePortrait,
+    preserveTransparency,
   ]);
   const choose = (e) => {
     const file = e.target.files?.[0];
@@ -134,7 +138,11 @@ export default function ImageUpload({
       onChange(
         name,
         canvasRef.current.toDataURL(
-          preservePortrait ? "image/webp" : "image/jpeg",
+          preserveTransparency
+            ? "image/png"
+            : preservePortrait
+              ? "image/webp"
+              : "image/jpeg",
           preservePortrait ? 0.9 : 0.85,
         ),
       );
@@ -153,7 +161,7 @@ export default function ImageUpload({
       <span className="field-label">{label}</span>
       <div className="image-upload-box">
         <div
-          className={`upload-thumb ${preservePortrait ? "portrait-upload-thumb" : name === "profilePhoto" ? "round" : ""}`}
+          className={`upload-thumb ${preservePortrait ? "portrait-upload-thumb" : name === "profilePhoto" ? "round" : ""} ${preserveTransparency ? "transparent-image-preview" : ""}`}
         >
           {value ? (
             <img src={value} alt={`${label} preview`} />
@@ -199,6 +207,13 @@ export default function ImageUpload({
           removed. Adjust its size and position in Make it yours.
         </p>
       )}
+      {preserveTransparency && (
+        <p className="field-hint">
+          Use a transparent PNG, WebP, or SVG logo. Transparency is preserved;
+          backgrounds already in the image are not removed. Replace previously
+          uploaded logos with the original transparent file.
+        </p>
+      )}
       {source && (
         <Modal
           title={
@@ -211,10 +226,12 @@ export default function ImageUpload({
           <p className="muted text-sm mb-5">
             {preservePortrait
               ? "The complete image is kept at its original proportions, including transparent areas. The checkerboard is only a preview. Replace the image if you need a transparent background."
-              : "Move and zoom to find the perfect fit. We’ll resize it for a fast-loading page. Animated images are saved as a still image."}
+              : preserveTransparency
+                ? "Move and zoom to fit your logo. Transparent areas stay transparent in the saved PNG. The checkerboard is only a preview, not part of your logo."
+                : "Move and zoom to find the perfect fit. We’ll resize it for a fast-loading page. Animated images are saved as a still image."}
           </p>
           <div
-            className={`crop-preview ${preservePortrait ? "portrait-upload-preview" : name === "profilePhoto" ? "crop-round" : ""}`}
+            className={`crop-preview ${preservePortrait ? "portrait-upload-preview" : name === "profilePhoto" ? "crop-round" : ""} ${preserveTransparency ? "transparent-image-preview" : ""}`}
             style={
               preservePortrait
                 ? { width: "100%", height: "auto" }

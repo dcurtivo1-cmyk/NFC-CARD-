@@ -549,10 +549,12 @@ export default function Editor() {
             </p>
             <h3>Your images</h3>
             <p>
-              Profile photos and logos are cropped to 512 × 512 JPEGs. Showcase
-              images use 1024 × 576; cover photos use a 1200 × 400 landscape
-              crop. Images are processed before being stored in your browser.
-              Large collections can reach your browser’s storage limit.
+              Logos are cropped to 512 × 512 PNGs with transparency preserved.
+              Other profile photos use JPEG, while business card portraits keep
+              their proportions and transparency. Showcase images use 1024 ×
+              576; cover photos use a 1200 × 400 landscape crop. Images are
+              processed before being stored in your browser. Large collections
+              can reach your browser’s storage limit.
             </p>
             <Link className="text-link" to="/about-demo">
               More about this prototype <ArrowUpRight size={15} />

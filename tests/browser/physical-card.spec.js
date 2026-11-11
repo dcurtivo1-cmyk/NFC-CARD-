@@ -38,6 +38,10 @@ test("physical card follows edits and saved drafts on mobile", async ({
       "data-template",
       id,
     );
+    await expect(card.locator(".physical-card-artwork svg")).toHaveCount(0);
+    await expect(card.locator(".physical-card-artwork")).not.toContainText(
+      "QR after",
+    );
   }
   await templates.getByRole("button", { name: "Classic", exact: true }).click();
   await expect(card.locator(".physical-card-artwork")).toContainText(
@@ -90,6 +94,7 @@ test("physical card follows edits and saved drafts on mobile", async ({
 test("published physical cards export both sides with embedded logo, bleed and matching QR", async ({
   page,
 }) => {
+  test.setTimeout(90_000);
   const errors = [];
   page.on("pageerror", (error) => errors.push(error.message));
   const doc = {
@@ -120,9 +125,26 @@ test("published physical cards export both sides with embedded logo, bleed and m
     .locator(".share-qr svg path")
     .last()
     .getAttribute("d");
-  expect(await card.locator("svg svg path").last().getAttribute("d")).toBe(
-    qrPath,
-  );
+  for (const name of [
+    "Classic",
+    "Midnight",
+    "Minimal",
+    "Split",
+    "Wave",
+    "Outline",
+  ]) {
+    await card.getByRole("button", { name, exact: true }).click();
+    await expect(card.locator(".physical-card-artwork svg")).toHaveCount(0);
+    await expect(card.locator(".physical-card-thumbnail svg")).toHaveCount(0);
+    await card.getByRole("button", { name: "Back", exact: true }).click();
+    expect(
+      await card
+        .locator(".physical-card-artwork svg path")
+        .last()
+        .getAttribute("d"),
+    ).toBe(qrPath);
+    await card.getByRole("button", { name: "Front", exact: true }).click();
+  }
   await card.getByRole("button", { name: "Midnight", exact: true }).click();
   for (const side of ["front", "back"]) {
     await card
@@ -145,7 +167,11 @@ test("published physical cards export both sides with embedded logo, bleed and m
     expect(svg).toContain('fill="#151e30"');
     expect(svg).toContain("Maria &amp; Clara Santos");
     expect(svg).toContain(doc.details.logo);
-    expect(svg).toContain(qrPath);
+    if (side === "back") expect(svg).toContain(qrPath);
+    else {
+      expect(svg).not.toContain(qrPath);
+      expect(svg).not.toContain("SCAN TO CONNECT");
+    }
     expect(svg).toContain("NFC tap icon");
     expect(svg).not.toContain("QR after");
   }

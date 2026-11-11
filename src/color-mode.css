@@ -503,7 +503,12 @@
   background: #382b47;
   border-color: #9270b5;
 }
-:root[data-color-mode="dark"] .crop-preview {
+.transparent-image-preview,
+:root[data-color-mode="dark"] .transparent-image-preview {
+  background: repeating-conic-gradient(#e9e5ed 0% 25%, #fff 0% 50%) 0 0 / 16px
+    16px;
+}
+:root[data-color-mode="dark"] .crop-preview:not(.transparent-image-preview) {
   background: var(--studio-input);
   border-color: var(--studio-border);
 }

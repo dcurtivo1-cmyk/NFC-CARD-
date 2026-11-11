@@ -1,5 +1,124 @@
 import { test, expect } from "@playwright/test";
 
+test("logo transparency and white artwork survive crop, save, publishing and print export", async ({
+  page,
+}) => {
+  test.setTimeout(90_000);
+  await page.goto("/editor?type=card&sample=1");
+  const source = await page.evaluate(() => {
+    const canvas = document.createElement("canvas");
+    canvas.width = canvas.height = 64;
+    const context = canvas.getContext("2d");
+    context.fillStyle = "rgba(255, 0, 0, 0.5)";
+    context.fillRect(16, 16, 32, 32);
+    context.fillStyle = "white";
+    context.fillRect(24, 24, 16, 16);
+    return canvas.toDataURL("image/png");
+  });
+  await page.getByLabel("Upload business logo", { exact: true }).setInputFiles({
+    name: "transparent-logo.png",
+    mimeType: "image/png",
+    buffer: Buffer.from(source.split(",")[1], "base64"),
+  });
+  const crop = page.locator(".crop-preview canvas");
+  await expect(
+    page.getByRole("button", { name: "Use this image", exact: true }),
+  ).toBeEnabled();
+  await page.getByLabel("Zoom", { exact: true }).fill("1.2");
+  await page.getByLabel("Horizontal position", { exact: true }).fill("40");
+  await expect
+    .poll(() =>
+      crop.evaluate(
+        (canvas) => canvas.getContext("2d").getImageData(0, 0, 1, 1).data[3],
+      ),
+    )
+    .toBe(0);
+  await page.getByLabel("Zoom", { exact: true }).fill("1");
+  await page.getByLabel("Horizontal position", { exact: true }).fill("50");
+  await page
+    .getByRole("button", { name: "Use this image", exact: true })
+    .click();
+  const logo = await page
+    .getByAltText("Business logo preview")
+    .getAttribute("src");
+  expect(logo).toMatch(/^data:image\/png/);
+  const pixels = await page.evaluate(async (src) => {
+    const image = new Image();
+    image.src = src;
+    await image.decode();
+    const canvas = document.createElement("canvas");
+    canvas.width = canvas.height = 512;
+    const context = canvas.getContext("2d");
+    context.drawImage(image, 0, 0);
+    return [
+      [0, 0],
+      [160, 160],
+      [256, 256],
+    ].map(([x, y]) => Array.from(context.getImageData(x, y, 1, 1).data));
+  }, logo);
+  expect(pixels[0][3]).toBe(0);
+  expect(pixels[1][3]).toBe(128);
+  expect(pixels[2]).toEqual([255, 255, 255, 255]);
+  await expect(page.locator(".preview-panel .profile-logo")).toHaveAttribute(
+    "src",
+    logo,
+  );
+  await page.getByRole("button", { name: "Save draft", exact: true }).click();
+  const saved = await page.evaluate(
+    () => JSON.parse(localStorage.getItem("folio-studio-documents-v1"))[0],
+  );
+  expect(saved.details.logo).toBe(logo);
+  await page.goto(`/editor/${saved.id}`);
+  await expect(page.getByAltText("Business logo preview")).toHaveAttribute(
+    "src",
+    logo,
+  );
+  await page.getByRole("button", { name: "Final look", exact: false }).click();
+  await page
+    .getByRole("button", { name: "Generate my demo", exact: true })
+    .click();
+  await expect(page.getByRole("dialog")).toBeVisible();
+  const published = await page.request.get(`/api/pages/${saved.id}`);
+  expect((await published.json()).document.details.logo).toBe(logo);
+  await page.getByRole("button", { name: "Midnight", exact: true }).click();
+  await expect(page.locator(".physical-card-artwork image")).toHaveAttribute(
+    "href",
+    logo,
+  );
+  const printed = await page
+    .locator(".physical-card-artwork")
+    .evaluate(async (svg) => {
+      const { physicalCardBlob } = await import("/src/lib/physical-card.js");
+      const blob = await physicalCardBlob(svg, "svg");
+      const url = URL.createObjectURL(blob);
+      try {
+        const image = new Image();
+        image.src = url;
+        await image.decode();
+        const canvas = document.createElement("canvas");
+        canvas.width = 916;
+        canvas.height = 600;
+        const context = canvas.getContext("2d");
+        context.drawImage(image, 0, 0, 916, 600);
+        // Artwork includes 3 mm bleed. Sample the logo's transparent edge and white center.
+        const logo = svg.querySelector("image");
+        const x = (Number(logo.getAttribute("x")) + 3) * 10;
+        const y = (Number(logo.getAttribute("y")) + 3) * 10;
+        const size = Number(logo.getAttribute("width")) * 10;
+        return {
+          corner: Array.from(context.getImageData(x + 10, y + 10, 1, 1).data),
+          center: Array.from(
+            context.getImageData(x + size / 2, y + size / 2, 1, 1).data,
+          ),
+        };
+      } finally {
+        URL.revokeObjectURL(url);
+      }
+    });
+  expect(printed.corner).toEqual([21, 30, 48, 255]);
+  expect(printed.center).toEqual([255, 255, 255, 255]);
+});
+
 test("uploads multiple image formats, handles missing MIME types, and rejects unreadable files", async ({
   page,
 }) => {
@@ -76,7 +195,7 @@ test("uploads multiple image formats, handles missing MIME types, and rejects un
       "src",
       file.label === "profile photo"
         ? /^data:image\/(webp|png)/
-        : /^data:image\/jpeg/,
+        : /^data:image\/png/,
     );
   }
 

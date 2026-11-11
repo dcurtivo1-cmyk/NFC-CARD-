@@ -2,22 +2,23 @@ export const physicalCardTemplates = [
   {
     id: "classic",
     name: "Classic",
-    description: "Your page colors with a clean accent stripe.",
+    description:
+      "Bold typography, a signature side stripe, and generous space.",
   },
   {
     id: "midnight",
     name: "Midnight",
-    description: "Deep navy, gold details, and a fine frame.",
+    description: "Deep navy, fine gold geometry, and elegant serif lettering.",
   },
   {
     id: "minimal",
     name: "Minimal",
-    description: "White space and crisp black typography.",
+    description: "A typographic white card with a discreet brand footer.",
   },
   {
     id: "split",
     name: "Split",
-    description: "A bold brand panel beside a white QR area.",
+    description: "A colored brand rail and a spacious personal introduction.",
   },
   {
     id: "wave",
@@ -27,7 +28,8 @@ export const physicalCardTemplates = [
   {
     id: "outline",
     name: "Outline",
-    description: "QR on the left with a framed introduction.",
+    description:
+      "A centered introduction framed by a fine brand-colored border.",
   },
 ];
 
