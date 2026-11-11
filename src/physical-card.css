@@ -1,0 +1,85 @@
+.physical-card-panel {
+  margin-top: 24px;
+  padding: 20px;
+  border: 1px solid var(--studio-border, #e8e0ed);
+  border-radius: 18px;
+  background: var(--studio-surface, #fffdfb);
+  color: var(--studio-text, #2e2c35);
+  text-align: left;
+  min-width: 0;
+}
+.physical-card-heading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.physical-card-heading h3 {
+  font-size: 16px;
+  margin: 0;
+}
+.physical-card-heading > span {
+  font-size: 9px;
+  letter-spacing: 1px;
+  margin-left: auto;
+}
+.physical-card-panel p {
+  font-size: 12px;
+  line-height: 1.65;
+  margin: 10px 0;
+}
+.physical-card-sides {
+  display: flex;
+  gap: 6px;
+  margin: 14px 0;
+}
+.physical-card-sides button {
+  padding: 6px 16px;
+  border: 1px solid var(--studio-border, #e8e0ed);
+  border-radius: 8px;
+  font-size: 12px;
+}
+.physical-card-sides button[aria-pressed="true"] {
+  background: #ede6fb;
+  color: #4d357b;
+  border-color: #ad97d8;
+}
+.physical-card-stage {
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px #00000012;
+}
+.physical-card-artwork {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 85.6 / 53.98;
+}
+.physical-card-spec {
+  text-align: center;
+}
+.physical-card-downloads {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.physical-card-downloads .btn {
+  flex: 1 1 auto;
+}
+.physical-card-instructions {
+  margin-top: 14px;
+  font-size: 12px;
+}
+.physical-card-instructions summary {
+  cursor: pointer;
+  font-weight: 600;
+}
+.physical-card-note {
+  border-left: 2px solid #ad97d8;
+  padding-left: 10px;
+}
+@media (max-width: 400px) {
+  .physical-card-panel {
+    padding: 14px;
+  }
+}

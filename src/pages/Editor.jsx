@@ -37,6 +37,7 @@ import ProductIcon from "../components/ProductIcon";
 import ProfileCard from "../components/ProfileCard";
 import DetailsForm from "../components/DetailsForm";
 import DesignForm from "../components/DesignForm";
+import PhysicalCard from "../components/PhysicalCard";
 
 function loadInitial(id, params) {
   try {
@@ -459,6 +460,7 @@ export default function Editor() {
             <span className="preview-dot" />
             This is your good side. Every side is.
           </div>
+          <PhysicalCard document={document} />
           <div className="recovery-status">
             <Check size={13} />
             {recoveryError

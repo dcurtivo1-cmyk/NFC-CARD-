@@ -44,6 +44,10 @@ Contact buttons generate real `tel:`, `mailto:`, WhatsApp, website, social, and 
 
 ## Publishing, storage and NFC sharing
 
+**Custom physical NFC cards:** The editor's live preview and **Share & QR** include a **Physical NFC card** panel with front/back previews. Full name (rather than the optional display name), job title, uploaded business logo, business name, and palette colors follow the profile automatically. Change details under **Your details** and colors under **Make it yours**; existing draft and publishing storage preserves these choices. Each side includes a tap icon and a QR code for the same published profile URL.
+
+After publishing to a public HTTPS host, download each side as a self-contained SVG or a 2164 × 1417 px PNG (600 pixels per inch at the intended artwork size). Finished card size is **85.6 × 53.98 mm**, with **3 mm bleed** on all sides; exported artwork is **91.6 × 59.98 mm**. Drafts show a labeled QR placeholder and disable print downloads. Send both sides to your printer, specify the actual dimensions (PNG viewers may default to another print scale), and confirm their template and color requirements. SVG text uses Arial/system sans-serif; uploaded logo quality depends on its source. The printed tap icon does not program a chip: write the same profile URL with an NFC-writing app and test tap/scan before producing a batch.
+
 **Generated pages are published to persistent server storage. Drafts, workspace records and private editing keys stay in the creator's browser.**
 
 - Explicitly saved drafts and generated profiles use `folio-studio-documents-v1` in localStorage.

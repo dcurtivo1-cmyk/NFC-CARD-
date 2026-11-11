@@ -9,6 +9,7 @@ import {
   LoaderCircle,
 } from "lucide-react";
 import { Modal, useFeedback } from "./UI";
+import PhysicalCard from "./PhysicalCard";
 import { isPublicHost, publishPage } from "../lib/publishing";
 import { saveDocument } from "../lib/storage";
 import { preferredPublicUrl } from "../lib/public-url";
@@ -209,6 +210,7 @@ export default function ShareModal({
           </div>
         </>
       )}
+      <PhysicalCard document={document} />
     </Modal>
   );
 }

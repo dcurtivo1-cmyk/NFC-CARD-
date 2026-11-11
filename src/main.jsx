@@ -6,6 +6,7 @@ import "./styles.css";
 import "./profile-design.css";
 import "./templates.css";
 import "./color-mode.css";
+import "./physical-card.css";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
