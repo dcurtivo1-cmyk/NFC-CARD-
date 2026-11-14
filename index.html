@@ -28,6 +28,7 @@
     />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="stylesheet" href="/loading.css" />
+    <link rel="preload" as="image" href="/TapSync_NFC_Sync.png" />
     <title>Folio — A little page. A lasting impression.</title>
   </head>
   <body>
@@ -41,25 +42,20 @@
         <div class="loading-art" aria-hidden="true">
           <span class="loading-ripple"></span>
           <span class="loading-ripple loading-ripple-second"></span>
-          <div class="loading-card">
-            <span class="loading-card-brand">folio<span>.</span></span>
-            <svg class="loading-signal" viewBox="0 0 32 32" fill="none">
-              <circle cx="8" cy="16" r="2" fill="currentColor" />
-              <path
-                d="M14 10a9 9 0 0 1 0 12M19 6a15 15 0 0 1 0 20M24 2a21 21 0 0 1 0 28"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-              />
-            </svg>
-            <span class="loading-card-line"></span>
-            <span class="loading-card-line loading-card-line-short"></span>
+          <div class="loading-logo-frame">
+            <img
+              class="loading-logo"
+              src="/TapSync_NFC_Sync.png"
+              alt=""
+              width="500"
+              height="500"
+              fetchpriority="high"
+            />
           </div>
-          <span class="loading-spark"></span>
         </div>
         <div class="loading-copy">
           <p class="loading-title">Opening your page…</p>
-          <p class="loading-detail">A little page. A lasting impression.</p>
+          <p class="loading-detail">TapSync · One tap. A new connection.</p>
         </div>
         <div class="loading-track" aria-hidden="true"><span></span></div>
       </div>

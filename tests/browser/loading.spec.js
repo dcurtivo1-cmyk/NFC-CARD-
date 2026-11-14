@@ -16,6 +16,10 @@ test("the mobile landing shows a splash before JavaScript and releases it when r
   await page.goto("/", { waitUntil: "commit" });
   try {
     await expect(page.locator(".folio-loading")).toBeVisible();
+    await expect(page.locator(".loading-logo")).toHaveJSProperty(
+      "naturalWidth",
+      500,
+    );
     await expect(page.locator(".loading-title")).toHaveText(
       "Opening your page…",
     );
@@ -62,7 +66,11 @@ test("an NFC visit loads, recovers from an error, and respects reduced motion in
   await page.goto(`/p/${document.id}`);
   try {
     await expect(page.locator(".folio-loading")).toBeVisible();
-    await expect(page.locator(".loading-card")).toHaveCSS(
+    await expect(page.locator(".loading-logo")).toHaveJSProperty(
+      "naturalWidth",
+      500,
+    );
+    await expect(page.locator(".loading-logo-frame")).toHaveCSS(
       "animation-name",
       "none",
     );

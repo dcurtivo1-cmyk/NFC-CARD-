@@ -11,7 +11,7 @@ export function LoadingSpinner({ size = 18 }) {
 
 export default function Loading({
   children = "Getting things ready…",
-  detail = "A little page. A lasting impression.",
+  detail = "TapSync · One tap. A new connection.",
   fullScreen = false,
 }) {
   return (
@@ -24,23 +24,16 @@ export default function Loading({
       <div className="loading-art" aria-hidden="true">
         <span className="loading-ripple" />
         <span className="loading-ripple loading-ripple-second" />
-        <div className="loading-card">
-          <span className="loading-card-brand">
-            folio<span>.</span>
-          </span>
-          <svg className="loading-signal" viewBox="0 0 32 32" fill="none">
-            <circle cx="8" cy="16" r="2" fill="currentColor" />
-            <path
-              d="M14 10a9 9 0 0 1 0 12M19 6a15 15 0 0 1 0 20M24 2a21 21 0 0 1 0 28"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-            />
-          </svg>
-          <span className="loading-card-line" />
-          <span className="loading-card-line loading-card-line-short" />
+        <div className="loading-logo-frame">
+          <img
+            className="loading-logo"
+            src="/TapSync_NFC_Sync.png"
+            alt=""
+            width="500"
+            height="500"
+            fetchPriority="high"
+          />
         </div>
-        <span className="loading-spark" />
       </div>
       <div className="loading-copy">
         <p className="loading-title">{children}</p>
