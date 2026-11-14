@@ -3,23 +3,21 @@ body {
   margin: 0;
 }
 .folio-loading {
-  --loading-bg: #fbfaf8;
-  --loading-ink: #342b49;
-  --loading-muted: #80738e;
-  --loading-accent: #4966ee;
+  --loading-bg: #1d1e28;
+  --loading-ink: #f5f3fa;
+  --loading-muted: #b6b3c7;
+  --loading-accent: #c4b5fd;
   box-sizing: border-box;
   min-height: 72vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 24px;
+  gap: 22px;
   padding: 40px 24px;
   overflow: hidden;
   text-align: center;
-  background:
-    radial-gradient(ellipse at 50% 42%, #719af91c, transparent 55%),
-    var(--loading-bg);
+  background: var(--loading-bg);
   color: var(--loading-ink);
   font-family: "DM Sans", "Segoe UI", sans-serif;
 }
@@ -27,67 +25,61 @@ body {
   min-height: 100vh;
   min-height: 100svh;
 }
-:root[data-color-mode="dark"] .folio-loading {
-  --loading-bg: #15131d;
-  --loading-ink: #f1ecf8;
-  --loading-muted: #b9aec8;
-  --loading-accent: #8daaff;
+.loading-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
 }
-.loading-art {
-  position: relative;
-  width: min(300px, 100%);
-  height: 184px;
-  display: grid;
-  place-items: center;
-}
-.loading-ripple {
-  position: absolute;
-  width: 150px;
-  height: 150px;
-  border: 1px solid var(--loading-accent);
-  border-radius: 50%;
-  opacity: 0;
-  animation: loading-ripple 2.6s ease-out infinite;
-}
-.loading-ripple-second {
-  animation-delay: 1.3s;
-}
-.loading-logo-frame {
-  position: relative;
-  box-sizing: border-box;
+.loading-overlay > .folio-loading {
   width: 100%;
-  height: 120px;
-  overflow: hidden;
-  border: 1px solid #dfe7fc;
-  border-radius: 26px;
-  background: #fff;
-  box-shadow:
-    0 16px 40px -18px #355dcf55,
-    0 0 24px #548ce80a;
-  animation: loading-logo-arrive 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+  height: 100%;
 }
-.loading-logo-frame::after {
-  content: "";
-  position: absolute;
-  inset: -60% -100%;
-  background: linear-gradient(
-    110deg,
-    transparent 42%,
-    #ffffff70 50%,
-    transparent 58%
-  );
-  animation: loading-shine 2.6s ease-in-out infinite;
+.loading-overlay.is-leaving {
+  pointer-events: none;
+  animation: loading-exit 240ms ease-out forwards;
 }
-.loading-logo {
-  /* Center the original square asset's wordmark without altering the source. */
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 100%;
-  height: auto;
-  max-width: none;
+.tap-scene {
   display: block;
-  transform: translate(-50%, -50%);
+  width: min(360px, 100%);
+  height: auto;
+  flex: none;
+  overflow: visible;
+  --tap-cycle: 3.6s;
+}
+.tap-phone {
+  filter: drop-shadow(0 9px 10px #0d0e1855);
+}
+.tap-card {
+  transform-box: fill-box;
+  transform-origin: center;
+  filter: drop-shadow(0 10px 9px #0d0e1866);
+  animation: tap-approach var(--tap-cycle) cubic-bezier(0.45, 0, 0.25, 1)
+    infinite;
+}
+.tap-wave {
+  opacity: 0;
+  animation: tap-signal var(--tap-cycle) linear infinite;
+}
+.tap-wave-two {
+  animation-delay: 0.16s;
+}
+.tap-wave-three {
+  animation-delay: 0.32s;
+}
+.tap-screen-light {
+  opacity: 0.02;
+  animation: tap-light var(--tap-cycle) ease-in-out infinite;
+}
+.tap-halo {
+  opacity: 0;
+  animation: tap-halo var(--tap-cycle) ease-in-out infinite;
+}
+.tap-screen-success {
+  opacity: 0;
+  animation: tap-connected var(--tap-cycle) ease-in-out infinite;
+}
+.tap-screen-idle {
+  animation: tap-idle var(--tap-cycle) ease-in-out infinite;
 }
 .loading-copy p {
   margin: 0;
@@ -163,34 +155,87 @@ body {
   color: var(--studio-muted, #80738e);
   font-size: 12px;
 }
-@keyframes loading-ripple {
-  0% {
-    opacity: 0.25;
-    transform: scale(0.65);
-  }
+@keyframes tap-approach {
+  0%,
+  10%,
+  90%,
   100% {
-    opacity: 0;
-    transform: scale(1.5);
+    transform: translate(0, 10px) rotate(-8deg);
+  }
+  32%,
+  66% {
+    transform: translate(36px, -34px) rotate(-2deg);
   }
 }
-@keyframes loading-logo-arrive {
-  from {
+@keyframes tap-signal {
+  0%,
+  32% {
     opacity: 0;
-    transform: translateY(10px) scale(0.96);
+    transform: translateX(-4px);
+  }
+  37% {
+    opacity: 0.95;
+  }
+  52%,
+  100% {
+    opacity: 0;
+    transform: translateX(25px);
+  }
+}
+@keyframes tap-light {
+  0%,
+  42%,
+  88%,
+  100% {
+    opacity: 0.02;
+  }
+  56%,
+  70% {
+    opacity: 0.2;
+  }
+}
+@keyframes tap-halo {
+  0%,
+  42%,
+  88%,
+  100% {
+    opacity: 0;
+  }
+  56%,
+  70% {
+    opacity: 0.055;
+  }
+}
+@keyframes tap-connected {
+  0%,
+  48%,
+  86%,
+  100% {
+    opacity: 0;
+  }
+  57%,
+  72% {
+    opacity: 1;
+  }
+}
+@keyframes tap-idle {
+  0%,
+  44%,
+  88%,
+  100% {
+    opacity: 0.6;
+  }
+  54%,
+  74% {
+    opacity: 0;
+  }
+}
+@keyframes loading-exit {
+  from {
+    opacity: 1;
   }
   to {
-    opacity: 1;
-    transform: none;
-  }
-}
-@keyframes loading-shine {
-  0%,
-  15% {
-    transform: translateX(-40%);
-  }
-  75%,
-  100% {
-    transform: translateX(40%);
+    opacity: 0;
   }
 }
 @keyframes loading-travel {
@@ -219,6 +264,7 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .folio-loading *,
   .folio-loading *::after,
+  .loading-overlay.is-leaving,
   .loading-spinner,
   .page-reveal,
   .profile-landing .public-card-wrap,
@@ -226,11 +272,23 @@ body {
   .profile-landing .profile-content > * {
     animation: none !important;
   }
-  .loading-ripple {
-    opacity: 0.12;
+  .loading-overlay.is-leaving {
+    opacity: 0;
   }
-  .loading-ripple-second {
-    transform: scale(1.3);
+  .tap-card {
+    transform: translate(18px, -16px);
+  }
+  .tap-wave {
+    opacity: 0.45;
+  }
+  .tap-wave-two {
+    transform: translateX(10px);
+  }
+  .tap-wave-three {
+    transform: translateX(20px);
+  }
+  .tap-screen-light {
+    opacity: 0.12;
   }
   .loading-track > span {
     width: 100%;

@@ -1,8 +1,9 @@
-import { Component, lazy, Suspense } from "react";
+import { Component, lazy, Suspense, useEffect } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import Layout from "./components/Layout";
 import { EmptyState, FeedbackProvider, Loading } from "./components/UI";
 import Landing from "./pages/Landing";
+import { dismissStartupLoader } from "./components/Loading";
 const Selection = lazy(() => import("./pages/Selection"));
 const Editor = lazy(() => import("./pages/Editor"));
 const Dashboard = lazy(() => import("./pages/Dashboard"));
@@ -39,6 +40,7 @@ function EditorRoute() {
 }
 
 export default function App() {
+  useEffect(dismissStartupLoader, []);
   const { pathname } = useLocation();
   const publicPage = pathname.startsWith("/p/");
   return (

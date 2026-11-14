@@ -16,10 +16,9 @@ test("the mobile landing shows a splash before JavaScript and releases it when r
   await page.goto("/", { waitUntil: "commit" });
   try {
     await expect(page.locator(".folio-loading")).toBeVisible();
-    await expect(page.locator(".loading-logo")).toHaveJSProperty(
-      "naturalWidth",
-      500,
-    );
+    await expect(page.locator(".tap-phone")).toBeVisible();
+    await expect(page.locator(".tap-card")).toBeVisible();
+    await expect(page.locator(".tap-wave")).toHaveCount(3);
     await expect(page.locator(".loading-title")).toHaveText(
       "Opening your page…",
     );
@@ -35,6 +34,63 @@ test("the mobile landing shows a splash before JavaScript and releases it when r
   await expect(page.getByRole("heading", { level: 1 })).toContainText(
     "Big possibilities.",
   );
+  await expect(page.locator("#startup-loader")).toHaveCount(0);
+  await expect(page.locator(".folio-loading")).toHaveCount(0);
+});
+
+test("a ready NFC page appears beneath the fade even with the illustration paused mid-cycle", async ({
+  page,
+}) => {
+  const document = {
+    ...createDocument("card", true),
+    id: `fl-${crypto.randomUUID()}`,
+    publishedAt: new Date().toISOString(),
+    status: "generated",
+  };
+  let release;
+  const gate = new Promise((resolve) => {
+    release = resolve;
+  });
+  await page.route(`**/api/pages/${document.id}`, async (route) => {
+    await gate;
+    await route.fulfill({ json: { document } });
+  });
+  await page.goto(`/p/${document.id}`);
+  try {
+    await expect(page.locator("#root .loading-overlay")).toBeVisible();
+    await page.evaluate(() => {
+      document.querySelectorAll("#root .tap-scene").forEach((scene) => {
+        scene.getAnimations({ subtree: true }).forEach((animation) => {
+          animation.pause();
+          animation.currentTime = 1800;
+        });
+      });
+      window.sawContentDuringFade = false;
+      const observer = new MutationObserver(() => {
+        const overlay = document.querySelector(
+          "#root .loading-overlay.is-leaving",
+        );
+        if (
+          overlay &&
+          document.querySelector(".profile-landing .profile-name")
+        ) {
+          window.sawContentDuringFade =
+            getComputedStyle(overlay).pointerEvents === "none";
+          observer.disconnect();
+        }
+      });
+      observer.observe(document.getElementById("root"), {
+        childList: true,
+        subtree: true,
+        attributes: true,
+      });
+    });
+    await page.screenshot({ path: "test-results/loading-signal.png" });
+  } finally {
+    release();
+  }
+  await expect(page.locator(".profile-landing .profile-name")).toBeVisible();
+  expect(await page.evaluate(() => window.sawContentDuringFade)).toBe(true);
   await expect(page.locator(".folio-loading")).toHaveCount(0);
 });
 
@@ -66,17 +122,13 @@ test("an NFC visit loads, recovers from an error, and respects reduced motion in
   await page.goto(`/p/${document.id}`);
   try {
     await expect(page.locator(".folio-loading")).toBeVisible();
-    await expect(page.locator(".loading-logo")).toHaveJSProperty(
-      "naturalWidth",
-      500,
-    );
-    await expect(page.locator(".loading-logo-frame")).toHaveCSS(
+    await expect(page.locator("#root .tap-card")).toHaveCSS(
       "animation-name",
       "none",
     );
     await expect(page.locator(".folio-loading")).toHaveCSS(
       "background-color",
-      "rgb(21, 19, 29)",
+      "rgb(29, 30, 40)",
     );
     await page.screenshot({ path: "test-results/loading-dark.png" });
   } finally {

@@ -9,7 +9,8 @@ import {
 } from "lucide-react";
 import { readDocuments } from "../lib/storage";
 import { canManagePublishedPage, fetchPublishedPage } from "../lib/publishing";
-import { DemoNotice, EmptyState, Loading } from "../components/UI";
+import { DemoNotice, EmptyState } from "../components/UI";
+import { LoadingOverlay } from "../components/Loading";
 import ProfileCard from "../components/ProfileCard";
 import ShareModal from "../components/ShareModal";
 import { savePageOffline } from "../lib/offline";
@@ -66,12 +67,37 @@ export default function Profile() {
       setParams({ manage: "1" }, { replace: true });
     }
   }, [params, setParams]);
-  if (state.loading)
-    return (
-      <Loading fullScreen detail="Your next connection is a moment away.">
-        Opening your page…
-      </Loading>
-    );
+  return (
+    <LoadingOverlay
+      loading={Boolean(state.loading)}
+      detail="Your next connection is a moment away."
+    >
+      {!state.loading && (
+        <ProfileContent
+          state={state}
+          id={id}
+          params={params}
+          offlineReady={offlineReady}
+          share={share}
+          setShare={setShare}
+          setState={setState}
+          setAttempt={setAttempt}
+        />
+      )}
+    </LoadingOverlay>
+  );
+}
+
+function ProfileContent({
+  state,
+  id,
+  params,
+  offlineReady,
+  share,
+  setShare,
+  setState,
+  setAttempt,
+}) {
   const doc = state.document;
   if (!doc)
     return (

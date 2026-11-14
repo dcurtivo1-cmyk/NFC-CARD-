@@ -32,27 +32,165 @@
     <title>Folio — A little page. A lasting impression.</title>
   </head>
   <body>
-    <div id="root">
+    <div id="root"></div>
+    <div id="startup-loader" class="loading-overlay">
       <div
         class="folio-loading folio-loading-full"
         role="status"
         aria-live="polite"
         aria-atomic="true"
       >
-        <div class="loading-art" aria-hidden="true">
-          <span class="loading-ripple"></span>
-          <span class="loading-ripple loading-ripple-second"></span>
-          <div class="loading-logo-frame">
-            <img
-              class="loading-logo"
-              src="/TapSync_NFC_Sync.png"
-              alt=""
-              width="500"
-              height="500"
-              fetchpriority="high"
+        <svg
+          class="tap-scene"
+          viewBox="0 0 360 240"
+          fill="none"
+          aria-hidden="true"
+        >
+          <ellipse
+            cx="182"
+            cy="215"
+            rx="140"
+            ry="10"
+            fill="#12131C"
+            opacity=".45"
+          />
+          <circle class="tap-halo" cx="274" cy="107" r="84" fill="#C4B5FD" />
+          <g class="tap-phone">
+            <rect
+              x="225"
+              y="25"
+              width="104"
+              height="188"
+              rx="23"
+              fill="#11121B"
+              stroke="#686579"
+              stroke-width="1.5"
             />
-          </div>
-        </div>
+            <rect
+              x="231"
+              y="31"
+              width="92"
+              height="176"
+              rx="18"
+              fill="#262735"
+            />
+            <rect
+              class="tap-screen-light"
+              x="231"
+              y="31"
+              width="92"
+              height="176"
+              rx="18"
+              fill="#C4B5FD"
+            />
+            <rect x="261" y="38" width="32" height="6" rx="3" fill="#11121B" />
+            <circle
+              cx="277"
+              cy="100"
+              r="23"
+              stroke="#C4B5FD"
+              stroke-opacity=".2"
+            />
+            <g
+              class="tap-screen-idle"
+              stroke="#C4B5FD"
+              stroke-width="2"
+              stroke-linecap="round"
+            >
+              <path
+                d="M267 94a9 9 0 0 1 0 12M273 89a16 16 0 0 1 0 22M279 84a23 23 0 0 1 0 32"
+              />
+            </g>
+            <g class="tap-screen-success">
+              <circle cx="277" cy="100" r="22" fill="#C4B5FD" />
+              <path
+                d="m267 100 7 7 13-14"
+                stroke="#292637"
+                stroke-width="3"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </g>
+            <rect
+              x="253"
+              y="142"
+              width="48"
+              height="4"
+              rx="2"
+              fill="#C4B5FD"
+              opacity=".3"
+            />
+            <rect
+              x="262"
+              y="153"
+              width="30"
+              height="3"
+              rx="1.5"
+              fill="#C4B5FD"
+              opacity=".15"
+            />
+            <rect
+              x="263"
+              y="196"
+              width="28"
+              height="3"
+              rx="1.5"
+              fill="#EDEAF8"
+              opacity=".25"
+            />
+          </g>
+          <g class="tap-card">
+            <rect
+              x="22"
+              y="92"
+              width="132"
+              height="84"
+              rx="14"
+              fill="#353044"
+              stroke="#C4B5FD"
+              stroke-opacity=".65"
+            />
+            <rect
+              x="32"
+              y="102"
+              width="111"
+              height="36"
+              rx="8"
+              fill="#FAF9FF"
+            />
+            <svg
+              x="35"
+              y="104"
+              width="105"
+              height="32"
+              viewBox="20 180 460 145"
+            >
+              <image
+                class="loading-logo"
+                href="/TapSync_NFC_Sync.png"
+                width="500"
+                height="500"
+              />
+            </svg>
+            <path
+              d="M36 153h39M36 160h24"
+              stroke="#C4B5FD"
+              stroke-width="3"
+              stroke-linecap="round"
+              opacity=".5"
+            />
+            <g stroke="#C4B5FD" stroke-width="1.5" stroke-linecap="round">
+              <path
+                d="M124 149a5 5 0 0 1 0 8M129 146a9 9 0 0 1 0 14M134 143a13 13 0 0 1 0 20"
+              />
+            </g>
+          </g>
+          <g stroke="#C4B5FD" stroke-width="2" stroke-linecap="round">
+            <path class="tap-wave tap-wave-one" d="M198 64q12 16 0 32" />
+            <path class="tap-wave tap-wave-two" d="M198 64q12 16 0 32" />
+            <path class="tap-wave tap-wave-three" d="M198 64q12 16 0 32" />
+          </g>
+        </svg>
         <div class="loading-copy">
           <p class="loading-title">Opening your page…</p>
           <p class="loading-detail">TapSync · One tap. A new connection.</p>
@@ -62,7 +200,7 @@
     </div>
     <noscript>
       <style>
-        .folio-loading {
+        .loading-overlay {
           display: none;
         }
       </style>
