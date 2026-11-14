@@ -39,10 +39,25 @@ function EditorRoute() {
 }
 
 export default function App() {
+  const { pathname } = useLocation();
+  const publicPage = pathname.startsWith("/p/");
   return (
     <ErrorBoundary>
       <FeedbackProvider>
-        <Suspense fallback={<Loading />}>
+        <Suspense
+          fallback={
+            <Loading
+              fullScreen
+              detail={
+                publicPage
+                  ? "Your next connection is a moment away."
+                  : undefined
+              }
+            >
+              {publicPage ? "Opening your page…" : "Getting things ready…"}
+            </Loading>
+          }
+        >
           <Routes>
             <Route path="p/:id" element={<Profile />} />
             <Route element={<Layout />}>

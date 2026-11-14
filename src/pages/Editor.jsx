@@ -12,7 +12,6 @@ import {
   Check,
   CircleHelp,
   Eye,
-  LoaderCircle,
   Palette,
   PenLine,
   RotateCcw,
@@ -33,7 +32,13 @@ import {
 } from "../lib/storage";
 import { validateDetails } from "../lib/profile";
 import { publishPage } from "../lib/publishing";
-import { DemoNotice, EmptyState, Modal, useFeedback } from "../components/UI";
+import {
+  DemoNotice,
+  EmptyState,
+  LoadingSpinner,
+  Modal,
+  useFeedback,
+} from "../components/UI";
 import ProductIcon from "../components/ProductIcon";
 import ProfileCard from "../components/ProfileCard";
 import DetailsForm from "../components/DetailsForm";
@@ -284,13 +289,14 @@ export default function Editor() {
             className="btn btn-secondary"
             onClick={() => persist(false)}
             disabled={busy}
+            aria-busy={busy}
           >
-            {busy ? (
-              <LoaderCircle className="spin" size={16} />
-            ) : (
-              <Save size={16} />
-            )}
-            {document.status === "generated" ? "Save changes" : "Save draft"}
+            {busy ? <LoadingSpinner size={16} /> : <Save size={16} />}
+            {busy
+              ? "Saving…"
+              : document.status === "generated"
+                ? "Save changes"
+                : "Save draft"}
           </button>
         </div>
       </div>
@@ -419,15 +425,14 @@ export default function Editor() {
                 className="btn btn-primary btn-large generate-button"
                 onClick={() => persist(true)}
                 disabled={busy}
+                aria-busy={busy}
               >
-                {busy ? (
-                  <LoaderCircle size={18} className="spin" />
-                ) : (
-                  <Sparkles size={18} />
-                )}
-                {document.status === "generated"
-                  ? "Update demo profile"
-                  : "Generate my demo"}
+                {busy ? <LoadingSpinner size={18} /> : <Sparkles size={18} />}
+                {busy
+                  ? "Publishing your page…"
+                  : document.status === "generated"
+                    ? "Update demo profile"
+                    : "Generate my demo"}
                 <ArrowUpRight size={17} />
               </button>
               <span className="generate-caption">

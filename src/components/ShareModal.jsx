@@ -6,9 +6,8 @@ import {
   Check,
   ExternalLink,
   Link as LinkIcon,
-  LoaderCircle,
 } from "lucide-react";
-import { Modal, useFeedback } from "./UI";
+import { LoadingSpinner, Modal, useFeedback } from "./UI";
 import PhysicalCard from "./PhysicalCard";
 import { isPublicHost, publishPage } from "../lib/publishing";
 import { saveDocument } from "../lib/storage";
@@ -124,9 +123,10 @@ export default function ShareModal({
         <button
           className="btn btn-primary"
           disabled={publishing}
+          aria-busy={publishing}
           onClick={publish}
         >
-          {publishing && <LoaderCircle size={16} className="spin" />}{" "}
+          {publishing && <LoadingSpinner size={16} />}{" "}
           {publishing ? "Publishing…" : "Publish page"}
         </button>
       )}
@@ -167,14 +167,15 @@ export default function ShareModal({
             <button
               className="btn btn-primary"
               disabled={downloading}
+              aria-busy={downloading}
               onClick={() => downloadQR("png")}
             >
               {downloading ? (
-                <LoaderCircle size={16} className="spin" />
+                <LoadingSpinner size={16} />
               ) : (
                 <Download size={16} />
               )}
-              Download QR · PNG
+              {downloading ? "Preparing QR…" : "Download QR · PNG"}
             </button>
             <button
               className="btn btn-secondary"
@@ -231,9 +232,10 @@ export default function ShareModal({
           <button
             className="btn btn-primary"
             disabled={publishing}
+            aria-busy={publishing}
             onClick={publish}
           >
-            {publishing && <LoaderCircle size={16} className="spin" />}
+            {publishing && <LoadingSpinner size={16} />}
             {publishing ? "Saving card design…" : "Save card design"}
           </button>
         </div>

@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
 import { ArrowUpRight, Menu, X, LayoutGrid } from "lucide-react";
-import { Brand } from "./UI";
+import { Brand, Loading } from "./UI";
 import ColorModeToggle from "./ColorModeToggle";
 
 export default function Layout() {
@@ -63,8 +63,10 @@ export default function Layout() {
           </div>
         </div>
       </header>
-      <main id="main">
-        <Outlet />
+      <main id="main" key={location.pathname} className="page-reveal">
+        <Suspense fallback={<Loading />}>
+          <Outlet />
+        </Suspense>
       </main>
       <footer className="site-footer">
         <div className="footer-inner">

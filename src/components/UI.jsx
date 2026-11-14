@@ -4,11 +4,11 @@ import {
   X,
   Info,
   AlertCircle,
-  LoaderCircle,
   ArrowUpRight,
   Sparkles,
 } from "lucide-react";
 import { Link } from "react-router-dom";
+export { default as Loading, LoadingSpinner } from "./Loading";
 
 const FeedbackContext = createContext();
 export const useFeedback = () => useContext(FeedbackContext);
@@ -231,15 +231,6 @@ export function EmptyState({ icon: Icon = Sparkles, title, children, action }) {
           <ArrowUpRight size={17} />
         </Link>
       )}
-    </div>
-  );
-}
-
-export function Loading({ children = "Getting things ready…" }) {
-  return (
-    <div className="loading-state" role="status">
-      <LoaderCircle className="spin" size={25} />
-      <p>{children}</p>
     </div>
   );
 }

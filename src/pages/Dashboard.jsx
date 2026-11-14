@@ -24,7 +24,12 @@ import {
   readEditor,
   saveDocument,
 } from "../lib/storage";
-import { DemoNotice, EmptyState, useFeedback } from "../components/UI";
+import {
+  DemoNotice,
+  EmptyState,
+  LoadingSpinner,
+  useFeedback,
+} from "../components/UI";
 import ProductIcon from "../components/ProductIcon";
 import ShareModal from "../components/ShareModal";
 
@@ -58,6 +63,7 @@ export default function Dashboard() {
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState("recent");
   const [share, setShare] = useState(null);
+  const [deleting, setDeleting] = useState(null);
   const { notify, confirm } = useFeedback();
   useEffect(() => {
     const refresh = () => setData(load());
@@ -91,6 +97,7 @@ export default function Dashboard() {
     [data, filter, search, sort],
   );
   const remove = async (doc) => {
+    if (deleting) return;
     if (
       !(await confirm({
         title: "Delete this little page?",
@@ -99,6 +106,7 @@ export default function Dashboard() {
       }))
     )
       return;
+    setDeleting(doc.id);
     try {
       if (doc.publishedAt || canManagePublishedPage(doc.id))
         await deletePublishedPage(doc.id);
@@ -110,6 +118,8 @@ export default function Dashboard() {
       );
     } catch (e) {
       notify(e.message, "error");
+    } finally {
+      setDeleting(null);
     }
   };
   const duplicate = (doc) => {
@@ -377,9 +387,15 @@ export default function Dashboard() {
                       <button
                         className="icon-button delete-button"
                         aria-label={`Delete ${doc.details.fullName}`}
+                        disabled={Boolean(deleting)}
+                        aria-busy={deleting === doc.id}
                         onClick={() => remove(doc)}
                       >
-                        <Trash2 size={16} />
+                        {deleting === doc.id ? (
+                          <LoadingSpinner size={16} />
+                        ) : (
+                          <Trash2 size={16} />
+                        )}
                       </button>
                     </div>
                   </div>

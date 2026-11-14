@@ -1,12 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import {
-  Upload,
-  X,
-  Crop,
-  Image as ImageIcon,
-  LoaderCircle,
-} from "lucide-react";
-import { Modal, useFeedback } from "./UI";
+import { Upload, X, Crop, Image as ImageIcon } from "lucide-react";
+import { LoadingSpinner, Modal, useFeedback } from "./UI";
 
 export default function ImageUpload({
   label,
@@ -245,7 +239,12 @@ export default function ImageUpload({
             }
           >
             <canvas ref={canvasRef} width={canvasWidth} height={outputHeight} />
-            {!loaded && <LoaderCircle className="spin" />}
+            {!loaded && (
+              <div className="crop-loading" role="status">
+                <LoadingSpinner size={26} />
+                <span>Opening image…</span>
+              </div>
+            )}
           </div>
           {!preservePortrait &&
             [
@@ -272,9 +271,10 @@ export default function ImageUpload({
             <button
               className="btn btn-primary"
               disabled={!loaded || busy}
+              aria-busy={busy}
               onClick={apply}
             >
-              <Crop size={16} />
+              {busy ? <LoadingSpinner size={16} /> : <Crop size={16} />}
               {busy ? "Processing…" : "Use this image"}
             </button>
           </div>

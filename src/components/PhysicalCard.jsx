@@ -1,11 +1,11 @@
 import { useRef, useState } from "react";
-import { CreditCard, Download, LoaderCircle } from "lucide-react";
+import { CreditCard, Download } from "lucide-react";
 import PhysicalCardArtwork from "./PhysicalCardArtwork";
 import { preferredPublicUrl } from "../lib/public-url";
 import { isPublicHost } from "../lib/publishing";
 import { downloadBlob, profileUrl } from "../lib/profile";
 import { physicalCardBlob } from "../lib/physical-card";
-import { useFeedback } from "./UI";
+import { LoadingSpinner, useFeedback } from "./UI";
 import {
   physicalCardTemplates,
   physicalCardStyle,
@@ -130,20 +130,19 @@ export default function PhysicalCard({
         <button
           className="btn btn-secondary btn-small"
           disabled={!ready || busy}
+          aria-busy={busy}
           onClick={() => download("svg")}
         >
-          {busy ? (
-            <LoaderCircle size={14} className="spin" />
-          ) : (
-            <Download size={14} />
-          )}{" "}
+          {busy ? <LoadingSpinner size={14} /> : <Download size={14} />}{" "}
           Download {side} SVG
         </button>
         <button
           className="btn btn-secondary btn-small"
           disabled={!ready || busy}
+          aria-busy={busy}
           onClick={() => download("png")}
         >
+          {busy && <LoadingSpinner size={14} />}
           Download {side} PNG
         </button>
       </div>

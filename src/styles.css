@@ -3228,21 +3228,6 @@ select.input {
   margin-top: 23px;
   font-size: 10px;
 }
-.loading-state {
-  min-height: 75vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  gap: 17px;
-  color: #7f698d;
-}
-.loading-state p {
-  font-size: 12px;
-}
-.spin {
-  animation: spin 1s linear infinite;
-}
 .fatal-error {
   min-height: 100vh;
   display: flex;
@@ -3281,12 +3266,6 @@ select.input {
 }
 .crop-round {
   border-radius: 50%;
-}
-.crop-preview > .spin {
-  position: absolute;
-  top: calc(50% - 12px);
-  left: calc(50% - 12px);
-  color: #806a8f;
 }
 .share-qr {
   display: flex;

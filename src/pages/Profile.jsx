@@ -66,7 +66,12 @@ export default function Profile() {
       setParams({ manage: "1" }, { replace: true });
     }
   }, [params, setParams]);
-  if (state.loading) return <Loading>Opening your page…</Loading>;
+  if (state.loading)
+    return (
+      <Loading fullScreen detail="Your next connection is a moment away.">
+        Opening your page…
+      </Loading>
+    );
   const doc = state.document;
   if (!doc)
     return (
