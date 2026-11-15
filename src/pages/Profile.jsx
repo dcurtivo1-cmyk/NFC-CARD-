@@ -152,7 +152,7 @@ function ProfileContent({
         <div className="public-toolbar">
           <Link to={owner ? "/dashboard" : "/"} className="back-link">
             <ArrowLeft size={15} />
-            {owner ? "My workspace" : "Folio Studio"}
+            {owner ? "My workspace" : "TapSync"}
           </Link>
           <div>
             {owner && (

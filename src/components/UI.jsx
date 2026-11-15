@@ -191,14 +191,16 @@ export function Brand({ light = false }) {
     <Link
       to="/"
       className={`brand ${light ? "brand-light" : ""}`}
-      aria-label="Folio home"
+      aria-label="TapSync home"
     >
-      <span className="brand-mark">
-        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-          <path d="M5 20V4h15v5H11v3h7v5h-7v3H5Z" fill="currentColor" />
-        </svg>
-      </span>
-      folio<span className="brand-period">.</span>
+      <img
+        className="brand-logo"
+        src="/brand-logo.jpg"
+        alt=""
+        width="44"
+        height="44"
+      />
+      <span>TapSync</span>
     </Link>
   );
 }

@@ -353,7 +353,7 @@ export default function ProfileCard({
             <div className="profile-powered">
               Made with{" "}
               <Link to="/">
-                folio<span>.</span>
+                TapSync
               </Link>
             </div>
           )}

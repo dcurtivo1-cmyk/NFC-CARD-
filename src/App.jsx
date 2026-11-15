@@ -26,7 +26,7 @@ class ErrorBoundary extends Component {
           className="btn btn-primary"
           onClick={() => window.location.reload()}
         >
-          Reload Folio
+          Reload TapSync
         </button>
       </div>
     ) : (

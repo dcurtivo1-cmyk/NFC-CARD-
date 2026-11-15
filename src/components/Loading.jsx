@@ -99,13 +99,16 @@ export function TapSyncScene() {
           strokeOpacity=".65"
         />
         <rect x="32" y="102" width="111" height="36" rx="8" fill="#FAF9FF" />
-        <svg x="35" y="104" width="105" height="32" viewBox="20 180 460 145">
+        <svg x="35" y="104" width="105" height="32" viewBox="0 0 105 32">
           <image
             className="loading-logo"
-            href="/TapSync_NFC_Sync.png"
-            width="500"
-            height="500"
+            href="/brand-logo.jpg"
+            width="32"
+            height="32"
           />
+          <text x="38" y="21" fill="#1739D5" fontSize="13" fontWeight="700">
+            TapSync
+          </text>
         </svg>
         <path
           d="M36 153h39M36 160h24"

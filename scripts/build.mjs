@@ -28,6 +28,7 @@ const types = {
   ".css": "text/css; charset=utf-8",
   ".svg": "image/svg+xml",
   ".png": "image/png",
+  ".jpg": "image/jpeg",
   ".json": "application/json",
 };
 const assets = {};
@@ -45,7 +46,7 @@ function collect(directory) {
 }
 collect(resolve("dist"));
 const shellUrls = Object.keys(assets).filter((path) =>
-  /\.(html|js|css|svg|png)$/.test(path),
+  /\.(html|js|css|svg|png|jpg)$/.test(path),
 );
 const shellVersion = createHash("sha256")
   .update(JSON.stringify(assets))
