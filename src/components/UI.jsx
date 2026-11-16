@@ -195,7 +195,7 @@ export function Brand({ light = false }) {
     >
       <img
         className="brand-logo"
-        src="/brand-logo.jpg"
+        src="/brand-logo.png"
         alt=""
         width="44"
         height="44"
